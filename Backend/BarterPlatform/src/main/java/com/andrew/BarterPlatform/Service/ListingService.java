@@ -1,10 +1,12 @@
 package com.andrew.BarterPlatform.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
 import com.andrew.BarterPlatform.Dto.ListingDto;
+import com.andrew.BarterPlatform.Dto.ListingResultDto;
 import com.andrew.BarterPlatform.Entity.Listing;
 import com.andrew.BarterPlatform.Entity.User;
 import com.andrew.BarterPlatform.Repository.ListingRepository;
@@ -20,8 +22,24 @@ public class ListingService {
 	private final ListingRepository listingRepo;
 	private final UserRepository userRepo;
 	
-	public List<Listing> getAllListings() {
-		return listingRepo.findAll();
+	public List<ListingResultDto> getAllListings(String search) {
+		List<Listing> listings = new ArrayList<>();
+		if(search == null || search.isBlank())
+			 listings = listingRepo.findAll();
+		else
+			listings = listingRepo.searchListings(search);
+		
+		List<ListingResultDto> results = new ArrayList<>();
+		for(Listing listing : listings) {
+			ListingResultDto result = new ListingResultDto();
+			result.setTitle(listing.getTitle());
+			result.setCategory(listing.getCategory());
+			result.setDescription(listing.getDescription());
+			result.setOwnername(listing.getOwner().getProfileName());
+			results.add(result);
+		}
+		
+		return results;
 	}
 	
 	public Listing getListingById(Long id) {

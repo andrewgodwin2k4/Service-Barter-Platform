@@ -11,9 +11,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.andrew.BarterPlatform.Dto.ListingDto;
+import com.andrew.BarterPlatform.Dto.ListingResultDto;
 import com.andrew.BarterPlatform.Entity.Listing;
 import com.andrew.BarterPlatform.Service.ListingService;
 
@@ -28,8 +30,8 @@ public class ListingController {
 	
 
     @GetMapping
-    public ResponseEntity<List<Listing>> getAllListings() {
-        return new ResponseEntity<>(listingService.getAllListings(), HttpStatus.OK);
+    public ResponseEntity<List<ListingResultDto>> getAllListings(@RequestParam(required=false) String search) {
+        return new ResponseEntity<>(listingService.getAllListings(search), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
