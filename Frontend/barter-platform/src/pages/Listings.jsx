@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Search } from "lucide-react";
-import { api } from "@/lib/api"; 
+import api from "@/lib/api"; 
 
 export default function Listings() {
   const [listings, setListings] = useState([]);
