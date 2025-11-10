@@ -2,7 +2,7 @@ package com.andrew.BarterPlatform.Enum;
 
 public enum SkillCategory {
 	
-	PROGRAMMING_TECH,
+	PROGRAMMING_TECh,
     CREATIVE_ARTS,
     WRITING,
     MUSIC,

@@ -1,6 +1,7 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { BarChart3, User, Home, List } from "lucide-react";
+
 
 const links = [
     { path: "/", label: "Home", icon: <Home size={18}/> },
@@ -29,8 +30,11 @@ export default function Navbar() {
                     </NavLink>
                ))}
             </div>
-
-            <Button size="sm" className="bg-green-800 text-gray-200 hover:bg-green-900 cursor-pointer">Login</Button>
+            
+            <Link to="/login">
+                <Button size="sm" className="bg-green-800 text-gray-200 hover:bg-green-900 cursor-pointer">Login</Button>
+            </Link>   
+     
         </nav>
     );
 }

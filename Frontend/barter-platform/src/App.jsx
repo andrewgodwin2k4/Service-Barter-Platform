@@ -5,6 +5,8 @@ import Transactions from "./pages/Transactions";
 import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 import Navbar from "./components/layout/Navbar"
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 
 function App() {
   return(
@@ -17,6 +19,8 @@ function App() {
             <Route path="/listings" element={<Listings />} />
             <Route path="/transactions" element={<Transactions />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
