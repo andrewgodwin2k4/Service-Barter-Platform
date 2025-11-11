@@ -1,13 +1,14 @@
 import { NavLink, Link, useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { Button } from "@/components/ui/button";
-import { BarChart3, User, Home, List } from "lucide-react";
+import { BarChart3, User, Home, List, ClipboardList } from "lucide-react";
 import { AuthContext } from "@/context/AuthContext";
 
 const links = [
   { path: "/", label: "Home", icon: <Home size={18}/> },
   { path: "/listings", label: "Listings", icon: <List size={18}/> },
   { path: "/transactions", label: "Transactions", icon: <BarChart3 size={18}/> },
+  { path: "/offer-services", label: "My Services", icon: <ClipboardList size={18}/> },
   { path: "/profile", label: "Profile", icon: <User size={18}/> }
 ];
 

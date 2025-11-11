@@ -20,5 +20,12 @@ public interface ListingRepository extends JpaRepository<Listing, Long> {
     	   "LOWER(l.description) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
     	   "LOWER(CAST(l.category AS string)) LIKE LOWER(CONCAT('%', :search, '%'))")
     List<Listing> searchListings(@Param("search") String search);
+    
+    @Query("SELECT l FROM Listing l WHERE l.owner = :owner AND (" +
+    	   "LOWER(l.title) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
+    	   "LOWER(l.description) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
+    	   "LOWER(CAST(l.category AS string)) LIKE LOWER(CONCAT('%', :search, '%')))")
+    List<Listing> searchListingsByOwner(@Param("owner") User owner, @Param("search") String search);
+
 
 }

@@ -59,7 +59,7 @@ export default function Listings() {
           listings.map((listing) => (
             <div
               key={listing.id}
-              className="bg-[#001334] border border-gray-800 rounded-2xl shadow-md p-4 flex flex-col hover:shadow-gray-800 transition-all"
+              className="bg-[#001334] border border-gray-800 hover:border-green-800 rounded-2xl shadow-md p-4 flex flex-col hover:shadow-gray-800 transition-all"
             >
               <div className="flex items-center justify-between mb-3">
                 <h3 className="text-lg font-semibold text-gray-100">{listing.title}</h3>

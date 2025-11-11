@@ -49,7 +49,7 @@ export default function Home() {
 
         <div className="flex flex-wrap justify-center gap-4">
 
-          <Link to="/profile">
+          <Link to="/offer-services">
             <Button className="bg-zinc-700 hover:bg-zinc-800 text-gray-100 cursor-pointer">
               Offer a Service
             </Button>

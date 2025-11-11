@@ -28,17 +28,18 @@ public class ListingController {
 
 	private final ListingService listingService;
 	
-
-    @GetMapping
-    public ResponseEntity<List<ListingResultDto>> getAllListings(@RequestParam(required=false) String search) {
-        return new ResponseEntity<>(listingService.getAllListings(search), HttpStatus.OK);
-    }
+	@GetMapping
+	public ResponseEntity<List<ListingResultDto>> getAllListings(@RequestParam(required = false) String search, @RequestParam(required = false) Long userId) {
+	    if (userId != null) 
+	        return new ResponseEntity<>(listingService.getListingsForUser(search, userId), HttpStatus.OK);
+	    return new ResponseEntity<>(listingService.getAllListings(search), HttpStatus.OK);
+	}
 
     @GetMapping("/{id}")
     public ResponseEntity<Listing> getListingById(@PathVariable Long id) {
         return new ResponseEntity<>(listingService.getListingById(id), HttpStatus.OK);
     }
-
+    
     @PostMapping
     public ResponseEntity<Listing> createListing(@RequestBody ListingDto dto) {
         return new ResponseEntity<>(listingService.createListing(dto), HttpStatus.CREATED);

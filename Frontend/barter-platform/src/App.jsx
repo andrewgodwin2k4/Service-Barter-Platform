@@ -8,6 +8,7 @@ import Navbar from "./components/layout/Navbar"
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ProtectedRoute from "./components/ProtectedRoute";
+import OfferServices from "./pages/OfferServices";
 
 function App() {
   return(
@@ -22,6 +23,7 @@ function App() {
             <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/offer-services" element={<OfferServices />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>

@@ -27,6 +27,11 @@ public class UserService {
 		return userRepo.findById(id).orElseThrow(()-> new EntityNotFoundException("User not Found!"));
 	}
 	
+	public User findByEmail(String email) {
+	    return userRepo.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("User not found!"));
+	}
+
+	
 	public User createUser(UserDto userDto) {
 		
 		if (userRepo.findByEmail(userDto.getEmail()).isPresent()) 

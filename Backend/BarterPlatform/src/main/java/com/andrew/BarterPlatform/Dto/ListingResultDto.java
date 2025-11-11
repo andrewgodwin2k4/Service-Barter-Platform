@@ -15,5 +15,6 @@ public class ListingResultDto {
 	SkillCategory category;
 	String description;
 	String ownername;
+	Integer creditValue;
 	
 }
