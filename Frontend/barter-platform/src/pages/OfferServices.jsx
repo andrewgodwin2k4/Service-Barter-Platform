@@ -145,7 +145,7 @@ export default function OfferServices() {
       ) : (
         <div className="grid sm:grid-cols-2 gap-6">
           {listings.map((listing) => (
-            <div key={listing.id} className="flex flex-col gap-2 p-5 rounded-xl border border-gray-800 hover:border-green-800 shadow-md hover:shadow-gray-800 bg-[#001334] transition-colors">
+            <div key={listing.id} className="flex flex-col gap-2 p-5 rounded-xl border border-gray-800 hover:border-green-800 shadow-md hover:shadow-gray-800  bg-gray-900 transition-colors">
               <div className="flex justify-between items-center">
                 <div className="flex items-center gap-3">
                   <Handshake className="text-green-600" size={22} />

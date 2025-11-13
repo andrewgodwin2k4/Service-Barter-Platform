@@ -29,7 +29,7 @@ public class ListingController {
 	private final ListingService listingService;
 	
 	@GetMapping
-	public ResponseEntity<List<ListingResultDto>> getAllListings(@RequestParam(required = false) String search, @RequestParam(required = false) Long userId) {
+	public ResponseEntity<List<Listing>> getAllListings(@RequestParam(required = false) String search, @RequestParam(required = false) Long userId) {
 	    if (userId != null) 
 	        return new ResponseEntity<>(listingService.getListingsForUser(search, userId), HttpStatus.OK);
 	    return new ResponseEntity<>(listingService.getAllListings(search), HttpStatus.OK);

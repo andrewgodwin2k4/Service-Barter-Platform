@@ -22,28 +22,17 @@ public class ListingService {
 	private final ListingRepository listingRepo;
 	private final UserRepository userRepo;
 	
-	public List<ListingResultDto> getAllListings(String search) {
-		List<Listing> listings = new ArrayList<>();
+	public List<Listing> getAllListings(String search) {
+		List<Listing> listings;
 		if(search == null || search.isBlank())
 			 listings = listingRepo.findAll();
 		else
 			listings = listingRepo.searchListings(search);
 		
-		List<ListingResultDto> results = new ArrayList<>();
-		for(Listing listing : listings) {
-			ListingResultDto result = new ListingResultDto();
-			result.setTitle(listing.getTitle());
-			result.setCategory(listing.getCategory());
-			result.setDescription(listing.getDescription());
-			result.setOwnername(listing.getOwner().getProfileName());
-			result.setCreditValue(listing.getCreditValue());
-			results.add(result);
-		}
-		
-		return results;
+		return listings;
 	}
 	
-	public List<ListingResultDto> getListingsForUser(String search, Long userId) {
+	public List<Listing> getListingsForUser(String search, Long userId) {
 	    User owner = userRepo.findById(userId).orElseThrow(() -> new EntityNotFoundException("Owner not found!"));
 
 	    List<Listing> listings;
@@ -52,18 +41,7 @@ public class ListingService {
 	    else 
 	        listings = listingRepo.searchListingsByOwner(owner, search);
 
-	    List<ListingResultDto> results = new ArrayList<>();
-	    for (Listing listing : listings) {
-	        ListingResultDto result = new ListingResultDto();
-	        result.setTitle(listing.getTitle());
-	        result.setCategory(listing.getCategory());
-	        result.setDescription(listing.getDescription());
-	        result.setOwnername(listing.getOwner().getProfileName());
-	        result.setCreditValue(listing.getCreditValue());
-	        results.add(result);
-	    }
-
-	    return results;
+	    return listings;
 	}
 
 	

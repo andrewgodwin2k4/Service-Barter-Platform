@@ -31,10 +31,21 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .cors(cors -> cors.configurationSource(corsConfigurationSource())) 
             .authorizeHttpRequests(auth -> auth
-            		.requestMatchers("/auth/**", "/").permitAll()
-            		.requestMatchers(HttpMethod.GET, "/listings/**").permitAll()
-            		.requestMatchers("/listings/**").authenticated()
-            		.anyRequest().authenticated())
+            	    .requestMatchers(
+            	        "/auth/**",
+            	        "/",
+            	        "/v3/api-docs/**",
+            	        "/swagger-ui/**",
+            	        "/swagger-ui.html",
+            	        "/swagger-resources/**",
+            	        "/webjars/**",
+            	        "/configuration/**"
+            	    ).permitAll()
+            	    .requestMatchers(HttpMethod.GET, "/listings/**").permitAll()
+            	    .requestMatchers("/listings/**").authenticated()
+            	    .anyRequest().authenticated()
+            )
+
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 

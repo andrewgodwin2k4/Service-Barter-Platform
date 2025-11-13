@@ -33,6 +33,16 @@ public class BarterTransactionService {
         return transRepo.findAll();
     }
 	
+	@Transactional(readOnly = true)
+	public List<BarterTransaction> getTransactionsByLearner(Long learnerId) {
+	    return transRepo.findByLearnerId(learnerId);
+	}
+
+	@Transactional(readOnly = true)
+	public List<BarterTransaction> getRequestsForTutor(Long tutorId) {
+	    return transRepo.findByTutorId(tutorId);
+	}
+	
 	public BarterTransaction createTransaction(BarterTransactionDto dto) {
 		
 		 User learner = userRepo.findById(dto.getLearnerId()).orElseThrow(() -> new EntityNotFoundException("Learner not found!"));

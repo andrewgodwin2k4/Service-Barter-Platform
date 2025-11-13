@@ -21,6 +21,17 @@ public class BarterTransactionController {
     public ResponseEntity<List<BarterTransaction>> getAllTransactions() {
         return ResponseEntity.ok(transactionService.getAllTransactions());
     }
+    
+    @GetMapping("/user/{learnerId}")
+    public ResponseEntity<List<BarterTransaction>> getUserTransactions(@PathVariable Long learnerId) {
+        return ResponseEntity.ok(transactionService.getTransactionsByLearner(learnerId));
+    }
+
+    @GetMapping("/requests/{tutorId}")
+    public ResponseEntity<List<BarterTransaction>> getTutorRequests(@PathVariable Long tutorId) {
+        return ResponseEntity.ok(transactionService.getRequestsForTutor(tutorId));
+    }
+
 
     @PostMapping
     public ResponseEntity<BarterTransaction> create(@RequestBody BarterTransactionDto dto) {
