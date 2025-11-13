@@ -15,51 +15,56 @@ export default function Login() {
     e.preventDefault();
     setError("");
     try {
-        const res = await api.post("/auth/login", form);
-        setToken(res.data.token);
-        navigate("/");
-    } 
-    catch (err) {
-        setError("Invalid email or password");
+      const res = await api.post("/auth/login", form);
+      setToken(res.data.token);
+      navigate("/");
+    } catch (err) {
+      setError("Invalid email or password");
     }
   };
 
   return (
-    
-    <div className="max-w-md mx-auto bg-gray-900 p-8 rounded-2xl shadow-lg">
-      <h1 className="text-2xl font-bold mb-6 text-center">Login to <span className="text-green-600">XERV</span></h1>
+    <div className="max-w-md mx-auto bg-[#1E0B2E] p-8 rounded-2xl shadow-lg text-[#F5EFFF]">
+      <h1 className="text-2xl font-bold mb-6 text-center">
+        Login to <span className="text-[#E67E22]">XERV</span>
+      </h1>
+
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <input
-            type="email"
-            name="email"
-            placeholder="Email"
-            value={form.email}
-            onChange={handleChange}
-            className="p-2 bg-gray-800 rounded-lg focus:outline-none"
-            required
+          type="email"
+          name="email"
+          placeholder="Email"
+          value={form.email}
+          onChange={handleChange}
+          className="p-2 bg-[#2A1744] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9B5DE5]"
+          required
         />
         <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            value={form.password}
-            onChange={handleChange}
-            className="p-2 bg-gray-800 rounded-lg focus:outline-none"
-            required
+          type="password"
+          name="password"
+          placeholder="Password"
+          value={form.password}
+          onChange={handleChange}
+          className="p-2 bg-[#2A1744] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9B5DE5]"
+          required
         />
 
-        {error && <p className="text-red-500 text-sm text-center">{error}</p>}
+        {error && <p className="text-[#E67E22] text-sm text-center">{error}</p>}
 
-        <button type="submit" className="bg-green-800 hover:bg-green-900 cursor-pointer py-2 rounded-lg font-semibold">Login</button>
-      
+        <button
+          type="submit"
+          className="bg-[#2F8D46] hover:bg-[#2f8d46d2] text-gray-100 cursor-pointer py-2 rounded-lg font-semibold"
+        >
+          Login
+        </button>
       </form>
-      <p className="text-gray-400 text-sm text-center mt-4">
+
+      <p className="text-[#C3B8E2] text-sm text-center mt-4">
         Don’t have an account?{" "}
-        <Link to="/register" className="text-cyan-600 hover:underline">
+        <Link to="/register" className="text-[#E67E22] hover:underline">
           Register
         </Link>
       </p>
     </div>
-    
   );
 }

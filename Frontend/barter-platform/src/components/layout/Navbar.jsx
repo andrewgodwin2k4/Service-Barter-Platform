@@ -22,7 +22,7 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="flex items-center justify-between px-8 py-4 bg-gray-900 shadow-lg">
+    <nav className="flex items-center justify-between px-8 py-4 bg-[#1E0B2E] shadow-lg border-b border-[#2d0f52]">
       <h1 className="text-xl font-bold tracking-widest text-gray-100"
         style={{ fontFamily: "Trebuchet MS, sans-serif" }}>XERV</h1>
 
@@ -33,7 +33,7 @@ export default function Navbar() {
             to={path}
             className={({ isActive }) =>
               `flex items-center gap-2 px-3 py-2 rounded-md text-sm transition
-              ${isActive ? "bg-gray-800 text-gray-100" : "text-gray-400 hover:text-gray-100 hover:bg-gray-800"}`
+              ${isActive ? "bg-[#4f2b7b] text-[#F5EFFF]" : "text-[#C3B8E2] hover:text-[#F5EFFF] hover:bg-[#4f2b7b]"}` 
             }>
                 {icon}
                 {label}
@@ -42,11 +42,14 @@ export default function Navbar() {
       </div>
 
       {token ? (
-        <Button size="sm" onClick={handleLogout} className="bg-red-700 text-gray-200 hover:bg-red-800 cursor-pointer">Logout</Button>
-      ) 
-      : (
+        <Button size="sm" onClick={handleLogout} className="bg-[#c93434] hover:bg-[#c93434e8] text-[#F5EFFF] cursor-pointer">
+          Logout
+        </Button>
+      ) : (
         <Link to="/login">
-          <Button size="sm" className="bg-green-800 text-gray-200 hover:bg-green-900 cursor-pointer">Login</Button>
+          <Button size="sm" className="bg-[#2F8D46] hover:bg-[#2f8d46d2] text-gray-100 cursor-pointer font-semibold">
+            Login
+          </Button>
         </Link>
       )}
     </nav>

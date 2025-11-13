@@ -13,7 +13,7 @@ import OfferServices from "./pages/OfferServices";
 function App() {
   return(
     <Router>
-      <div className="min-h-screen bg-gray-950 text-gray-200">
+      <div className="min-h-screen bg-[#12071F] text-gray-200">
         <Navbar />
         <main className="px-6 py-8">
           <Routes>
