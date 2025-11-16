@@ -107,7 +107,7 @@ export default function OfferServices() {
   };
 
   return (
-    <div className="min-h-screen bg-[#12071F] text-[#F5EFFF] px-6 py-10">
+    <div className="min-h-screen bg-[#0D0D0D] text-[#F0F0F0] px-6 py-4">
       <div className="max-w-6xl mx-auto">
         <div className="flex justify-between items-center mb-10">
           <h1 className="text-3xl font-bold">
@@ -119,56 +119,56 @@ export default function OfferServices() {
               setIsEditing(false);
               setIsModalOpen(true);
             }}
-            className="bg-[#2F8D46] hover:bg-[#2f8d46d2] text-gray-100 font-semibold px-5 py-2 rounded-lg cursor-pointer transition-colors"
+            className="bg-[#1E5430] hover:bg-[#1e5430d1] text-[#E8F5E9] font-semibold px-5 py-2 rounded-lg cursor-pointer transition-colors"
           >
             Offer New Service
           </button>
         </div>
 
-        <div className="flex items-center gap-3 bg-gray-200 border border-[#9B5DE5] px-4 py-3 rounded-xl mb-10">
-          <Search className="text-[#12071F] w-5 h-5" />
+        <div className="flex items-center gap-3 bg-gray-200 border border-[#404040] px-4 py-3 rounded-xl mb-10">
+          <Search className="text-gray-950 w-5 h-5" />
           <input
             type="text"
             placeholder="Search your services..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="bg-transparent outline-none text-[#12071F] w-full placeholder-[#5E3D8B]"
+            className="bg-transparent outline-none text-gray-900 w-full placeholder-gray-700"
           />
         </div>
 
         {listings.length === 0 ? (
-          <p className="text-[#C3B8E2] italic text-center mt-10">
-            You haven’t offered any services yet!
+          <p className="text-[#B0B0B0] italic text-center mt-10">
+            You haven't offered any services yet!
           </p>
         ) : (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {listings.map((listing) => (
               <div
                 key={listing.id}
-                className="flex flex-col gap-2 p-5 rounded-2xl border border-[#9B5DE5] hover:border-[#00C9A7] bg-[#1E0B2E] shadow-md hover:shadow-[#9B5DE5]/50 transition-all"
+                className="flex flex-col gap-2 p-5 rounded-2xl border border-[#333333] hover:border-[#E67E22] bg-[#151515] shadow-md hover:shadow-[#E67E2233] transition-all"
               >
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-3">
                     <Handshake className="text-[#E67E22]" size={22} />
-                    <h3 className="font-semibold text-[#F5EFFF] text-lg">{listing.title}</h3>
+                    <h3 className="font-semibold text-[#F0F0F0] text-lg">{listing.title}</h3>
                   </div>
                   <div className="flex items-center gap-3">
                     <button
                       onClick={() => handleEdit(listing)}
-                      className="text-[#C3B8E2] hover:text-[#E67E22] transition cursor-pointer"
+                      className="text-[#B0B0B0] hover:text-[#E67E22] transition cursor-pointer"
                     >
                       <Pencil size={18} />
                     </button>
                     <button
                       onClick={() => handleDelete(listing.id)}
-                      className="text-[#C3B8E2] hover:text-[#FF4E50] transition cursor-pointer"
+                      className="text-[#B0B0B0] hover:text-[#DC2626] transition cursor-pointer"
                     >
                       <Trash2 size={18} />
                     </button>
                   </div>
                 </div>
-                <p className="text-[#C3B8E2]">{listing.description}</p>
-                <div className="flex justify-between text-sm text-[#C3B8E2] mt-2">
+                <p className="text-[#B0B0B0]">{listing.description}</p>
+                <div className="flex justify-between text-sm text-[#B0B0B0] mt-2">
                   <span className="flex items-center gap-2">
                     <Layers size={16} />
                     {listing.category}
@@ -185,8 +185,8 @@ export default function OfferServices() {
       </div>
 
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50">
-          <div className="bg-[#1E0B2E] rounded-2xl shadow-lg p-6 w-full max-w-lg text-[#F5EFFF] border border-[#9B5DE5]">
+        <div className="fixed inset-0 bg-black bg-opacity-90 flex justify-center items-center z-50">
+          <div className="bg-[#151515] rounded-2xl shadow-lg p-6 w-full max-w-lg text-[#F0F0F0] border border-[#333333]">
             <h2 className="text-2xl font-bold mb-6 text-center text-[#E67E22]">
               {isEditing ? "Update Service" : "Offer a New Service"}
             </h2>
@@ -198,7 +198,7 @@ export default function OfferServices() {
                 placeholder="Service Title"
                 value={form.title}
                 onChange={handleChange}
-                className="p-2 bg-[#12071F] border border-[#9B5DE5] rounded-lg focus:outline-none placeholder-[#C3B8E2]"
+                className="p-2 bg-[#0D0D0D] border border-[#404040] rounded-lg focus:outline-none placeholder-[#B0B0B0] text-[#F0F0F0] focus:ring-2 focus:ring-[#E67E22]"
                 required
               />
               <textarea
@@ -206,13 +206,13 @@ export default function OfferServices() {
                 placeholder="Description"
                 value={form.description}
                 onChange={handleChange}
-                className="p-2 h-32 bg-[#12071F] border border-[#9B5DE5] rounded-lg focus:outline-none placeholder-[#C3B8E2]"
+                className="p-2 h-32 bg-[#0D0D0D] border border-[#404040] rounded-lg focus:outline-none placeholder-[#B0B0B0] text-[#F0F0F0] focus:ring-2 focus:ring-[#E67E22]"
               />
               <select
                 name="category"
                 value={form.category}
                 onChange={handleChange}
-                className="p-2 bg-[#12071F] border border-[#9B5DE5] rounded-lg focus:outline-none"
+                className="p-2 bg-[#0D0D0D] border border-[#404040] rounded-lg focus:outline-none text-[#F0F0F0]"
                 required
               >
                 <option value="">Select Category</option>
@@ -237,23 +237,23 @@ export default function OfferServices() {
                 placeholder="Credits"
                 value={form.creditValue}
                 onChange={handleChange}
-                className="p-2 bg-[#12071F] border border-[#9B5DE5] rounded-lg focus:outline-none placeholder-[#C3B8E2]"
+                className="p-2 bg-[#0D0D0D] border border-[#404040] rounded-lg focus:outline-none placeholder-[#B0B0B0] text-[#F0F0F0] focus:ring-2 focus:ring-[#E67E22]"
                 required
               />
 
-              {error && <p className="text-[#FF4E50] text-sm text-center">{error}</p>}
+              {error && <p className="text-[#DC2626] text-sm text-center">{error}</p>}
 
               <div className="flex justify-between mt-4">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 bg-[#c93434] hover:bg-[#c93434e8] rounded-lg cursor-pointer font-semibold"
+                  className="px-4 py-2 bg-[#DC2626] hover:bg-[#B91C1C] rounded-lg cursor-pointer font-semibold text-[#F0F0F0]"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-[#2F8D46] hover:bg-[#2f8d46d2] text-gray-100 font-semibold rounded-lg cursor-pointer"
+                  className="px-4 py-2 bg-[#1E5430] hover:bg-[#1e5430d1] text-[#E8F5E9] font-semibold rounded-lg cursor-pointer"
                 >
                   {isEditing ? "Update" : "Add Service"}
                 </button>

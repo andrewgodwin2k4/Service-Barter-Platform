@@ -22,8 +22,8 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="flex items-center justify-between px-8 py-4 bg-[#1E0B2E] shadow-lg border-b border-[#2d0f52]">
-      <h1 className="text-xl font-bold tracking-widest text-gray-100"
+    <nav className="flex items-center justify-between px-8 py-4 bg-[#151515] shadow-lg border-b border-[#333333]">
+      <h1 className="text-xl font-bold tracking-widest text-[#E67E22]"
         style={{ fontFamily: "Trebuchet MS, sans-serif" }}>XERV</h1>
 
       <div className="flex items-center gap-4">
@@ -33,7 +33,7 @@ export default function Navbar() {
             to={path}
             className={({ isActive }) =>
               `flex items-center gap-2 px-3 py-2 rounded-md text-sm transition
-              ${isActive ? "bg-[#4f2b7b] text-[#F5EFFF]" : "text-[#C3B8E2] hover:text-[#F5EFFF] hover:bg-[#4f2b7b]"}` 
+              ${isActive ? "bg-[#2A2A2A] text-[#F0F0F0]" : "text-[#B0B0B0] hover:text-[#F0F0F0] hover:bg-[#2A2A2A]"}` 
             }>
                 {icon}
                 {label}
@@ -42,12 +42,12 @@ export default function Navbar() {
       </div>
 
       {token ? (
-        <Button size="sm" onClick={handleLogout} className="bg-[#c93434] hover:bg-[#c93434e8] text-[#F5EFFF] cursor-pointer">
+        <Button size="sm" onClick={handleLogout} className="bg-[#DC2626] hover:bg-[#B91C1C] text-[#F0F0F0] cursor-pointer">
           Logout
         </Button>
       ) : (
         <Link to="/login">
-          <Button size="sm" className="bg-[#2F8D46] hover:bg-[#2f8d46d2] text-gray-100 cursor-pointer font-semibold">
+          <Button size="sm" className="bg-[#1E5430] hover:bg-[#1e5430d1] text-[#E8F5E9] cursor-pointer font-semibold">
             Login
           </Button>
         </Link>
