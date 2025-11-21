@@ -42,14 +42,10 @@ export default function Navbar() {
       </div>
 
       {token ? (
-        <Button size="sm" onClick={handleLogout} className="bg-[#DC2626] hover:bg-[#B91C1C] text-[#F0F0F0] cursor-pointer">
-          Logout
-        </Button>
+        <Button size="sm" onClick={handleLogout} className="bg-[#DC2626] hover:bg-[#B91C1C] text-[#F0F0F0] cursor-pointer">Logout</Button>
       ) : (
         <Link to="/login">
-          <Button size="sm" className="bg-[#1E5430] hover:bg-[#1e5430d1] text-[#E8F5E9] cursor-pointer font-semibold">
-            Login
-          </Button>
+          <Button size="sm" className="bg-[#1E5430] hover:bg-[#1e5430d1] text-[#E8F5E9] cursor-pointer font-semibold">Login</Button>
         </Link>
       )}
     </nav>

@@ -1,8 +1,9 @@
 import { useEffect, useState, useContext } from "react";
 import { Button } from "@/components/ui/button";
-import { Search } from "lucide-react";
+import { Search, RefreshCw } from "lucide-react";
 import api from "@/lib/api";
 import { AuthContext } from "@/context/AuthContext";
+import { toast } from "sonner";
 
 export default function Listings() {
   const [listings, setListings] = useState([]);
@@ -25,7 +26,9 @@ export default function Listings() {
           headers: { Authorization: `Bearer ${token}` },
         });
         setCurrentUserId(res.data.id);
-      } catch (err) {
+      } 
+      catch (err) {
+        toast.error("Failed to fetch user");
         console.error("Failed to fetch current user", err);
       }
     };
@@ -37,22 +40,26 @@ export default function Listings() {
       try {
         const res = await api.get("/listings", { params: { search } });
         setListings(res.data || []);
-      } catch (err) {
+      } 
+      catch (err) {
         console.error(err);
         setError("Unable to load listings. Please try again later.");
-      } finally {
-        setLoading(false);
-      }
+        toast.error("Failed to load listings");
+      } 
+      setLoading(false);
     };
 
     fetchListings();
   }, [search]);
 
   const handleRequest = async () => {
-    if (!selectedListing || !currentUserId) return;
+    if (!selectedListing || !currentUserId) 
+      return;
     setRequesting(true);
     setRequestError("");
     setRequestSuccess("");
+
+    const id = toast.loading("Sending request...");
 
     try {
       await api.post("/transactions", {
@@ -63,14 +70,26 @@ export default function Listings() {
       });
 
       setRequestSuccess("Transaction request sent!");
-    } catch (err) {
+      toast.dismiss(id);
+      toast.success("Request sent!");
+    } 
+    catch (err) {
       console.error(err);
       setRequestError("Failed to request this service.");
-    } finally {
-      setRequesting(false);
-    }
+      toast.dismiss(id);
+      toast.error("Request failed");
+    } 
+    setRequesting(false);
   };
 
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#0D0D0D] flex items-center justify-center">
+        <RefreshCw className="w-8 h-8 animate-spin text-[#E67E22]" />
+      </div>
+    );
+  }
+  
   return (
     <section className="min-h-screen bg-[#0D0D0D] text-[#F0F0F0] px-6 py-4">
       <div className="max-w-5xl mx-auto mb-10 text-center">
@@ -94,7 +113,7 @@ export default function Listings() {
       </div>
 
       <div className="max-w-6xl mx-auto grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {loading && <p className="text-[#B0B0B0] text-center col-span-full">Loading listings...</p>}
+        {/* {loading && <p className="text-[#B0B0B0] text-center col-span-full">Loading listings...</p>} */}
         {error && <p className="text-[#DC2626] text-center col-span-full">{error}</p>}
 
         {!loading && !error && listings.length > 0 &&
@@ -121,9 +140,7 @@ export default function Listings() {
                 <Button
                   onClick={() => setSelectedListing(listing)}
                   className="bg-[#1E5430] hover:bg-[#1e5430d1] text-[#E8F5E9] font-semibold cursor-pointer"
-                >
-                  View
-                </Button>
+                >View</Button>
               </div>
             </div>
         ))}
@@ -139,9 +156,7 @@ export default function Listings() {
             <button
               className="absolute top-4 right-4 text-[#B0B0B0] hover:text-[#F0F0F0]"
               onClick={() => { setSelectedListing(null); setRequestError(""); setRequestSuccess(""); }}
-            >
-              ✕
-            </button>
+            >✕</button>
 
             <h2 className="text-2xl font-bold mb-2 text-[#E67E22]">{selectedListing.title}</h2>
             <p className="text-[#B0B0B0] mb-4">{selectedListing.description || "No description provided."}</p>
@@ -149,8 +164,8 @@ export default function Listings() {
             <p className="text-sm text-[#B0B0B0] mb-1"><strong>Credits:</strong> {selectedListing.creditValue}</p>
             <p className="text-sm text-[#B0B0B0] mb-4"><strong>Owner:</strong> {selectedListing.owner.profileName}</p>
 
-            {requestError && <p className="text-[#DC2626] mb-2">{requestError}</p>}
-            {requestSuccess && <p className="text-[#059669] mb-2">{requestSuccess}</p>}
+            {/* {requestError && <p className="text-[#DC2626] mb-2">{requestError}</p>}
+            {requestSuccess && <p className="text-[#059669] mb-2">{requestSuccess}</p>} */}
 
             <Button
               onClick={handleRequest}

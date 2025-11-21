@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "@/lib/api";
+import { toast } from "sonner";
 
 export default function Register() {
   const [form, setForm] = useState({
@@ -14,15 +15,26 @@ export default function Register() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+  const handleChange = (e) =>
+    setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+
+    const id = toast.loading("Creating your account...");
+
     try {
       await api.post("/auth/register", form);
+
+      toast.dismiss(id);
+      toast.success("Account created successfully!");
+
       navigate("/login");
-    } catch (err) {
+    } 
+    catch (err) {
+      toast.dismiss(id);
+      toast.error("Registration failed");
       setError("Registration failed");
     }
   };
@@ -77,7 +89,9 @@ export default function Register() {
           className="p-2 bg-[#0D0D0D] border border-[#404040] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E67E22] text-[#F0F0F0] placeholder-[#B0B0B0]"
         />
 
-        {error && <p className="text-[#DC2626] text-sm text-center">{error}</p>}
+        {error && (
+          <p className="text-[#DC2626] text-sm text-center">{error}</p>
+        )}
 
         <button
           type="submit"

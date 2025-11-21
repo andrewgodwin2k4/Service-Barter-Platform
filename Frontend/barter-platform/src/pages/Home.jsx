@@ -6,7 +6,6 @@ export default function Home() {
   return (
     <section className="relative min-h-[80vh] flex flex-col items-center justify-center text-center text-[#F0F0F0] px-6 overflow-hidden bg-[#0D0D0D]">
 
-      {/* SVG Background */}
       <svg
         className="absolute inset-0 w-full h-full opacity-30"
         xmlns="http://www.w3.org/2000/svg"
@@ -26,7 +25,6 @@ export default function Home() {
         ></path>
       </svg>
 
-      {/* Content */}
       <div className="relative z-10 flex flex-col items-center">
 
         <div className="flex items-center gap-2 text-[#B0B0B0] mb-4">

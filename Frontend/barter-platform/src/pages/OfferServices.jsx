@@ -1,7 +1,8 @@
 import { useEffect, useState, useContext } from "react";
 import api from "@/lib/api";
 import { AuthContext } from "@/context/AuthContext";
-import { Layers, Coins, Pencil, Trash2, Search, Handshake } from "lucide-react";
+import { Layers, Coins, Pencil, Trash2, Search, Handshake, RefreshCw } from "lucide-react";
+import { toast } from "sonner";
 
 export default function OfferServices() {
   const [listings, setListings] = useState([]);
@@ -13,6 +14,7 @@ export default function OfferServices() {
   });
   const [user, setUser] = useState(null);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editId, setEditId] = useState(null);
@@ -26,16 +28,26 @@ export default function OfferServices() {
           headers: { Authorization: `Bearer ${token}` },
         });
         setUser(res.data);
-      } catch (err) {
-        console.error("Failed to fetch user", err);
+        setLoading(false);
+      } 
+      catch (err) {
+        toast.error("Failed to load user");
+        setLoading(false);
       }
     };
     fetchUser();
   }, [token]);
 
   useEffect(() => {
-    if (user) fetchUserListings(search);
-  }, [user, search]);
+    if (!user) 
+      return;
+
+    const timer = setTimeout(() => {
+      fetchUserListings(search);
+    }, 250);
+
+    return () => clearTimeout(timer);
+  }, [search, user]);
 
   const fetchUserListings = async (query = "") => {
     try {
@@ -47,8 +59,9 @@ export default function OfferServices() {
         headers: { Authorization: `Bearer ${token}` },
       });
       setListings(res.data);
-    } catch (err) {
-      console.error("Failed to fetch listings", err);
+    } 
+    catch (err) {
+      toast.error("Failed to load services");
     }
   };
 
@@ -58,7 +71,10 @@ export default function OfferServices() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    if (!user) return setError("User not loaded yet");
+    if (!user) 
+      return setError("User not loaded yet");
+
+    const t = toast.loading(isEditing ? "Updating service..." : "Adding service...");
 
     try {
       const payload = { ...form, ownerId: user.id };
@@ -66,18 +82,24 @@ export default function OfferServices() {
         await api.put(`/listings/${editId}`, payload, {
           headers: { Authorization: `Bearer ${token}` },
         });
-      } else {
+        toast.success("Service updated successfully", { id: t });
+      } 
+      else {
         await api.post("/listings", payload, {
           headers: { Authorization: `Bearer ${token}` },
         });
+        toast.success("Service added successfully", { id: t });
       }
+
       fetchUserListings();
       setIsModalOpen(false);
       setForm({ title: "", description: "", category: "", creditValue: 1 });
       setIsEditing(false);
       setEditId(null);
-    } catch (err) {
+    } 
+    catch (err) {
       console.error(err);
+      toast.error("Failed to save service", { id: t });
       setError("Failed to save listing");
     }
   };
@@ -95,23 +117,38 @@ export default function OfferServices() {
   };
 
   const handleDelete = async (id) => {
-    if (!confirm("Are you sure you want to delete this listing?")) return;
+    if (!confirm("Are you sure you want to delete this listing?")) 
+      return;
+
+    const t = toast.loading("Deleting service...");
+
     try {
       await api.delete(`/listings/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
+      toast.success("Service deleted", { id: t });
       fetchUserListings();
-    } catch (err) {
+    } 
+    catch (err) {
       console.error("Failed to delete listing", err);
+      toast.error("Failed to delete service", { id: t });
     }
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#0D0D0D] flex items-center justify-center">
+        <RefreshCw className="w-8 h-8 animate-spin text-[#E67E22]" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#0D0D0D] text-[#F0F0F0] px-6 py-4">
       <div className="max-w-6xl mx-auto">
         <div className="flex justify-between items-center mb-10">
           <h1 className="text-3xl font-bold">
-            Your <span className="text-[#E67E22]">Services</span>
+            My <span className="text-[#E67E22]">Services</span>
           </h1>
           <button
             onClick={() => {
@@ -125,11 +162,11 @@ export default function OfferServices() {
           </button>
         </div>
 
-        <div className="flex items-center gap-3 bg-gray-200 border border-[#404040] px-4 py-3 rounded-xl mb-10">
+        <div className="flex items-center gap-3 bg-gray-300 border border-[#404040] px-4 py-3 rounded-xl mb-10">
           <Search className="text-gray-950 w-5 h-5" />
           <input
             type="text"
-            placeholder="Search your services..."
+            placeholder="Search your services"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="bg-transparent outline-none text-gray-900 w-full placeholder-gray-700"
