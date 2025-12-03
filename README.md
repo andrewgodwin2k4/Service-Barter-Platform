@@ -3,7 +3,7 @@
 XERV is a full-stack platform that enables users to **exchange services using credits instead of money**, encouraging collaboration, mutual support, and skill sharing.  
 Users can browse a wide range of services, offer their own, and manage barters through a structured, secure workflow.
 
-This project demonstrates real-world implementation of **secure full-stack architecture**, aiming to create a mutual support environment where users help each other as a trusted, harmonial community.
+This project demonstrates real-world implementation of **secure full-stack architecture**, aiming to create a mutual support environment where users help each other in a trusted community.
 
 ---
 
