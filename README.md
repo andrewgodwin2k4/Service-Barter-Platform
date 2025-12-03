@@ -27,5 +27,3 @@ This project demonstrates real-world implementation of **secure full-stack archi
 - **Group-Based Barter** – Multiple users offering or consuming services collaboratively  
 
 ---
-
-   mvn spring-boot:run
