@@ -11,7 +11,7 @@ This project demonstrates real-world implementation of **secure full-stack archi
 
 - **Service Listings** – Create, browse, filter, and manage services across categories  
 - **Credit-Based Barter System** – Earn credits by offering services and spend credits to consume them  
-- **Request Workflow** – Send, accept, reject, and track service exchange requests  
+- **Exchange Workflow** – Send, accept, reject, and track service exchange requests  
 - **Fairness & Dispute System** – Auto-completion logic and dispute resolution mechanisms  
 - **Authentication & Authorization** – Secure JWT-based login with protected routes  
 - **Modern UI** – Built using React & Tailwind for a fast, responsive interface  
