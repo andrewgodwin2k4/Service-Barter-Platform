@@ -31,12 +31,12 @@ public class BarterTransaction {
 	private Long id;
 	
 	@ManyToOne
-	@JoinColumn(name = "learner_id", nullable = false)
-	private User learner;
+	@JoinColumn(name = "buyer_id", nullable = false)
+	private User buyer;
 	
 	@ManyToOne
-	@JoinColumn(name = "tutor_id", nullable = false)
-	private User tutor;
+	@JoinColumn(name = "provider_id", nullable = false)
+	private User provider;
 	
 	@ManyToOne
 	@JoinColumn(name = "listing_id", nullable = false)
@@ -46,12 +46,17 @@ public class BarterTransaction {
 	@Column(nullable = false)
 	private Integer credits;
 	
+	private Integer rating; // 1 to 5 stars, null if unrated
+	
 	@Enumerated(EnumType.STRING)
 	private TransactionStatus status = TransactionStatus.PENDING;
 	
 	private LocalDateTime createdAt = LocalDateTime.now();
 	private LocalDateTime updatedAt = LocalDateTime.now();
 	private LocalDateTime deliveredAt;
+	
+	private String deliveryLink;
+	private String deliveryNote;
 
 	
 	@PreUpdate

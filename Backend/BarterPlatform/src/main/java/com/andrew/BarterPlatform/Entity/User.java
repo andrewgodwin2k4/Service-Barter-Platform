@@ -33,6 +33,15 @@ public class User {
 	private String profileName;
 	private String bio;
 	private Integer credits = 10;
+	
+	@Column(name = "average_rating")
+	private Double averageRating = 0.0;
+	
+	@Column(name = "total_ratings")
+	private Integer totalRatings = 0;
+
+	@Column(name = "avatar_url")
+	private String avatarUrl;
 
 	public User(String username, String email, String password, String profileName, String bio) {
 		this.username = username;

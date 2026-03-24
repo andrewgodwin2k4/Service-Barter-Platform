@@ -1,53 +1,148 @@
 import { NavLink, Link, useNavigate } from "react-router-dom";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { BarChart3, User, Home, List, ClipboardList } from "lucide-react";
+import { BarChart3, User, Home, List, ClipboardList, Menu, X, Hexagon } from "lucide-react";
 import { AuthContext } from "@/context/AuthContext";
+import { motion, AnimatePresence } from "framer-motion";
+import { ThemeToggle } from "../ThemeToggle";
 
 const links = [
-  { path: "/", label: "Home", icon: <Home size={18}/> },
-  { path: "/listings", label: "Listings", icon: <List size={18}/> },
-  { path: "/transactions", label: "Transactions", icon: <BarChart3 size={18}/> },
-  { path: "/offer-services", label: "My Services", icon: <ClipboardList size={18}/> },
-  { path: "/profile", label: "Profile", icon: <User size={18}/> }
+  { path: "/", label: "Home", icon: <Home size={18} /> },
+  { path: "/listings", label: "Listings", icon: <List size={18} /> },
+  { path: "/transactions", label: "Transactions", icon: <BarChart3 size={18} /> },
+  { path: "/offer-services", label: "My Services", icon: <ClipboardList size={18} /> },
+  { path: "/profile", label: "Profile", icon: <User size={18} /> },
 ];
 
 export default function Navbar() {
   const { token, logout } = useContext(AuthContext);
   const navigate = useNavigate();
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleLogout = () => {
     logout();
     navigate("/login");
+    setMobileOpen(false);
   };
 
   return (
-    <nav className="flex items-center justify-between px-8 py-4 bg-[#151515] shadow-lg border-b border-[#333333]">
-      <h1 className="text-xl font-bold tracking-widest text-[#E67E22]"
-        style={{ fontFamily: "Trebuchet MS, sans-serif" }}>XERV</h1>
+    <nav className="sticky top-0 z-50 bg-white/80 dark:bg-black/80 backdrop-blur-md border-b border-zinc-200 dark:border-zinc-800 transition-colors duration-300">
+      <div className="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 lg:px-8 py-3">
+        {/* Brand */}
+        <Link to="/" className="flex items-center gap-2 group">
+          <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center shadow-sm">
+            <Hexagon className="w-5 h-5 text-primary-foreground fill-primary-foreground" />
+          </div>
+          <span className="text-xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
+            XERV
+          </span>
+        </Link>
 
-      <div className="flex items-center gap-4">
-        {links.map(({ path, label, icon }) => (
-          <NavLink
-            key={path}
-            to={path}
-            className={({ isActive }) =>
-              `flex items-center gap-2 px-3 py-2 rounded-md text-sm transition
-              ${isActive ? "bg-[#2A2A2A] text-[#F0F0F0]" : "text-[#B0B0B0] hover:text-[#F0F0F0] hover:bg-[#2A2A2A]"}` 
-            }>
-                {icon}
-                {label}
-          </NavLink>
-        ))}
+        {/* Desktop Nav */}
+        <div className="hidden lg:flex items-center gap-1">
+          {links.map(({ path, label, icon }) => (
+            <NavLink
+              key={path}
+              to={path}
+              className={({ isActive }) =>
+                `relative flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200
+                ${isActive
+                  ? "text-primary bg-primary/10"
+                  : "text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800/50"
+                }`
+              }
+            >
+              {icon}
+              {label}
+            </NavLink>
+          ))}
+        </div>
+
+        {/* Desktop Auth Button & Theme Toggle */}
+        <div className="hidden lg:flex items-center gap-3">
+          <ThemeToggle />
+          
+          {token ? (
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={handleLogout}
+              className="border-zinc-200 dark:border-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-700 dark:text-zinc-300"
+            >
+              Logout
+            </Button>
+          ) : (
+            <Link to="/login">
+              <Button size="sm" className="font-medium shadow-sm">
+                Login
+              </Button>
+            </Link>
+          )}
+        </div>
+
+        {/* Mobile Controls */}
+        <div className="lg:hidden flex items-center gap-2">
+          <ThemeToggle />
+          <button
+            className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 p-2"
+            onClick={() => setMobileOpen(!mobileOpen)}
+            aria-label="Toggle menu"
+          >
+            {mobileOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
       </div>
 
-      {token ? (
-        <Button size="sm" onClick={handleLogout} className="bg-[#DC2626] hover:bg-[#B91C1C] text-[#F0F0F0] cursor-pointer">Logout</Button>
-      ) : (
-        <Link to="/login">
-          <Button size="sm" className="bg-[#1E5430] hover:bg-[#1e5430d1] text-[#E8F5E9] cursor-pointer font-semibold">Login</Button>
-        </Link>
-      )}
+      {/* Mobile Menu */}
+      <AnimatePresence>
+        {mobileOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.25, ease: "easeInOut" }}
+            className="lg:hidden overflow-hidden border-t border-zinc-200 dark:border-zinc-800 bg-white dark:bg-black"
+          >
+            <div className="px-4 py-4 space-y-1">
+              {links.map(({ path, label, icon }) => (
+                <NavLink
+                  key={path}
+                  to={path}
+                  onClick={() => setMobileOpen(false)}
+                  className={({ isActive }) =>
+                    `flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200
+                    ${isActive
+                      ? "text-primary bg-primary/10"
+                      : "text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-50 dark:hover:bg-zinc-900/50"
+                    }`
+                  }
+                >
+                  {icon}
+                  {label}
+                </NavLink>
+              ))}
+
+              <div className="pt-3 mt-2 border-t border-zinc-200 dark:border-zinc-800">
+                {token ? (
+                  <Button
+                    variant="outline"
+                    onClick={handleLogout}
+                    className="w-full flex justify-center text-zinc-700 dark:text-zinc-300"
+                  >
+                    Logout
+                  </Button>
+                ) : (
+                  <Link to="/login" onClick={() => setMobileOpen(false)}>
+                    <Button className="w-full flex justify-center">
+                      Login
+                    </Button>
+                  </Link>
+                )}
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </nav>
   );
 }

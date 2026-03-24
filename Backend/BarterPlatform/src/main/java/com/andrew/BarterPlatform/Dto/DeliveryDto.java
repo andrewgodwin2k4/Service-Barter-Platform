@@ -7,11 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class BarterTransactionDto {
+public class DeliveryDto {
 
-	private Long buyerId;
-    private Long providerId;
-    private Long listingId;
-    private Integer credits;
+	private String deliveryLink;
+	private String deliveryNote;
 	
 }

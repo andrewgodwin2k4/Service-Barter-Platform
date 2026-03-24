@@ -15,9 +15,24 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.MediaType;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.UUID;
+
+import jakarta.annotation.PostConstruct;
+
+import com.andrew.BarterPlatform.Service.UserService;
 import com.andrew.BarterPlatform.Dto.UserDto;
 import com.andrew.BarterPlatform.Entity.User;
-import com.andrew.BarterPlatform.Service.UserService;
+import com.andrew.BarterPlatform.Repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -27,6 +42,18 @@ import lombok.RequiredArgsConstructor;
 public class UserController {
 
 	private final UserService userService;
+	private final UserRepository userRepository;
+	
+	private final Path fileStorageLocation = Paths.get("uploads/avatars").toAbsolutePath().normalize();
+
+	@PostConstruct
+	public void init() {
+		try {
+			Files.createDirectories(this.fileStorageLocation);
+		} catch (Exception ex) {
+			throw new RuntimeException("Could not create directory where uploaded files will be stored.", ex);
+		}
+	}
 	
 	@GetMapping("/me")
 	public ResponseEntity<User> getCurrentUser(@AuthenticationPrincipal UserDetails userDetails) {
@@ -58,6 +85,39 @@ public class UserController {
 	public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody UserDto userDto) {
 		User user = userService.updateUser(id, userDto);
 		return new ResponseEntity<>(user, HttpStatus.OK);
+	}
+	
+	@PostMapping("/{id}/avatar")
+	public ResponseEntity<User> uploadAvatar(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
+		User user = userRepository.findById(id).orElse(null);
+		if (user == null) return ResponseEntity.notFound().build();
+		try {
+			String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename().replaceAll("[^a-zA-Z0-9\\.\\-]", "_");
+			Path targetLocation = this.fileStorageLocation.resolve(fileName);
+			Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
+			
+			user.setAvatarUrl("/users/avatar/" + fileName);
+			userRepository.save(user);
+			return ResponseEntity.ok(user);
+		} catch (Exception ex) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+	}
+	
+	@GetMapping("/avatar/{fileName:.+}")
+	public ResponseEntity<Resource> getAvatar(@PathVariable String fileName) {
+		try {
+			Path filePath = this.fileStorageLocation.resolve(fileName).normalize();
+			Resource resource = new UrlResource(filePath.toUri());
+			if (resource.exists()) {
+				String contentType = Files.probeContentType(filePath);
+				if (contentType == null) contentType = "application/octet-stream";
+				return ResponseEntity.ok()
+						.contentType(MediaType.parseMediaType(contentType))
+						.body(resource);
+			}
+		} catch (Exception ex) {}
+		return ResponseEntity.notFound().build();
 	}
 	
 	@DeleteMapping("/{id}")

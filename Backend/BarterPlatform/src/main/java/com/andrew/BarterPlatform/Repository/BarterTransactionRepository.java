@@ -8,8 +8,8 @@ import com.andrew.BarterPlatform.Enum.TransactionStatus;
 public interface BarterTransactionRepository extends JpaRepository<BarterTransaction, Long> {
 	
     List<BarterTransaction> findByStatus(TransactionStatus status);
-    List<BarterTransaction> findByLearnerId(Long learnerId);
-    List<BarterTransaction> findByTutorId(Long tutorId);
+    List<BarterTransaction> findByBuyerId(Long buyerId);
+    List<BarterTransaction> findByProviderId(Long providerId);
 
     
 }

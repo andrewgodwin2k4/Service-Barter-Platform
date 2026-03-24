@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.andrew.BarterPlatform.Dto.BarterTransactionDto;
+import com.andrew.BarterPlatform.Dto.DeliveryDto;
 import com.andrew.BarterPlatform.Entity.BarterTransaction;
 import com.andrew.BarterPlatform.Service.BarterTransactionService;
 
@@ -22,14 +23,14 @@ public class BarterTransactionController {
         return ResponseEntity.ok(transactionService.getAllTransactions());
     }
     
-    @GetMapping("/user/{learnerId}")
-    public ResponseEntity<List<BarterTransaction>> getUserTransactions(@PathVariable Long learnerId) {
-        return ResponseEntity.ok(transactionService.getTransactionsByLearner(learnerId));
+    @GetMapping("/user/{buyerId}")
+    public ResponseEntity<List<BarterTransaction>> getUserTransactions(@PathVariable Long buyerId) {
+        return ResponseEntity.ok(transactionService.getTransactionsByBuyer(buyerId));
     }
 
-    @GetMapping("/requests/{tutorId}")
-    public ResponseEntity<List<BarterTransaction>> getTutorRequests(@PathVariable Long tutorId) {
-        return ResponseEntity.ok(transactionService.getRequestsForTutor(tutorId));
+    @GetMapping("/requests/{providerId}")
+    public ResponseEntity<List<BarterTransaction>> getProviderRequests(@PathVariable Long providerId) {
+        return ResponseEntity.ok(transactionService.getRequestsForProvider(providerId));
     }
 
 
@@ -49,8 +50,8 @@ public class BarterTransactionController {
     }
 
     @PutMapping("/{id}/deliver")
-    public ResponseEntity<BarterTransaction> deliver(@PathVariable Long id) {
-        return ResponseEntity.ok(transactionService.markDelivered(id));
+    public ResponseEntity<BarterTransaction> deliver(@PathVariable Long id, @RequestBody DeliveryDto deliveryDto) {
+        return ResponseEntity.ok(transactionService.markDelivered(id, deliveryDto));
     }
 
     @PutMapping("/{id}/complete")
@@ -58,9 +59,19 @@ public class BarterTransactionController {
         return ResponseEntity.ok(transactionService.markCompleted(id));
     }
 
+	@PutMapping("/{id}/revision")
+	public ResponseEntity<BarterTransaction> requestRevision(@PathVariable Long id) {
+		return ResponseEntity.ok(transactionService.requestRevision(id));
+	}
+
     @PutMapping("/{id}/dispute")
     public ResponseEntity<BarterTransaction> dispute(@PathVariable Long id) {
         return ResponseEntity.ok(transactionService.raiseDispute(id));
+    }
+    
+    @PutMapping("/{id}/rate")
+    public ResponseEntity<BarterTransaction> rate(@PathVariable Long id, @RequestParam Integer score) {
+        return ResponseEntity.ok(transactionService.rateTransaction(id, score));
     }
     
     @PutMapping("/{id}/cancel")

@@ -9,6 +9,7 @@ public enum TransactionStatus {
 	COMPLETED,
 	AUTO_COMPLETED,
 	DISPUTED,
-	CANCELLED
+	CANCELLED,
+	REVISION_REQUESTED
 	
 }

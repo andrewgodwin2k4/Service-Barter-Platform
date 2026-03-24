@@ -1,0 +1,45 @@
+﻿[ERROR] COMPILATION ERROR : 
+[ERROR] /D:/Projects/Service-Barter-Platform/Backend/BarterPlatform/src/main/java/com/andrew/BarterPlatform/Config/DataInitializer.java:[89,11] cannot find symbol
+  symbol:   method setUser(com.andrew.BarterPlatform.Entity.User)
+  location: variable l1 of type com.andrew.BarterPlatform.Entity.Listing
+[ERROR] /D:/Projects/Service-Barter-Platform/Backend/BarterPlatform/src/main/java/com/andrew/BarterPlatform/Config/DataInitializer.java:[96,11] cannot find symbol
+  symbol:   method setUser(com.andrew.BarterPlatform.Entity.User)
+  location: variable l2 of type com.andrew.BarterPlatform.Entity.Listing
+[ERROR] /D:/Projects/Service-Barter-Platform/Backend/BarterPlatform/src/main/java/com/andrew/BarterPlatform/Config/DataInitializer.java:[103,11] cannot find symbol
+  symbol:   method setUser(com.andrew.BarterPlatform.Entity.User)
+  location: variable l3 of type com.andrew.BarterPlatform.Entity.Listing
+[ERROR] /D:/Projects/Service-Barter-Platform/Backend/BarterPlatform/src/main/java/com/andrew/BarterPlatform/Config/DataInitializer.java:[110,11] cannot find symbol
+  symbol:   method setUser(com.andrew.BarterPlatform.Entity.User)
+  location: variable l4 of type com.andrew.BarterPlatform.Entity.Listing
+[ERROR] /D:/Projects/Service-Barter-Platform/Backend/BarterPlatform/src/main/java/com/andrew/BarterPlatform/Config/DataInitializer.java:[117,11] cannot find symbol
+  symbol:   method setUser(com.andrew.BarterPlatform.Entity.User)
+  location: variable l5 of type com.andrew.BarterPlatform.Entity.Listing
+[ERROR] /D:/Projects/Service-Barter-Platform/Backend/BarterPlatform/src/main/java/com/andrew/BarterPlatform/Config/DataInitializer.java:[124,11] cannot find symbol
+  symbol:   method setUser(com.andrew.BarterPlatform.Entity.User)
+  location: variable l6 of type com.andrew.BarterPlatform.Entity.Listing
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.14.1:compile (default-compile) on project BarterPlatform: Compilation failure: Compilation failure: 
+[ERROR] /D:/Projects/Service-Barter-Platform/Backend/BarterPlatform/src/main/java/com/andrew/BarterPlatform/Config/DataInitializer.java:[89,11] cannot find symbol
+[ERROR]   symbol:   method setUser(com.andrew.BarterPlatform.Entity.User)
+[ERROR]   location: variable l1 of type com.andrew.BarterPlatform.Entity.Listing
+[ERROR] /D:/Projects/Service-Barter-Platform/Backend/BarterPlatform/src/main/java/com/andrew/BarterPlatform/Config/DataInitializer.java:[96,11] cannot find symbol
+[ERROR]   symbol:   method setUser(com.andrew.BarterPlatform.Entity.User)
+[ERROR]   location: variable l2 of type com.andrew.BarterPlatform.Entity.Listing
+[ERROR] /D:/Projects/Service-Barter-Platform/Backend/BarterPlatform/src/main/java/com/andrew/BarterPlatform/Config/DataInitializer.java:[103,11] cannot find symbol
+[ERROR]   symbol:   method setUser(com.andrew.BarterPlatform.Entity.User)
+[ERROR]   location: variable l3 of type com.andrew.BarterPlatform.Entity.Listing
+[ERROR] /D:/Projects/Service-Barter-Platform/Backend/BarterPlatform/src/main/java/com/andrew/BarterPlatform/Config/DataInitializer.java:[110,11] cannot find symbol
+[ERROR]   symbol:   method setUser(com.andrew.BarterPlatform.Entity.User)
+[ERROR]   location: variable l4 of type com.andrew.BarterPlatform.Entity.Listing
+[ERROR] /D:/Projects/Service-Barter-Platform/Backend/BarterPlatform/src/main/java/com/andrew/BarterPlatform/Config/DataInitializer.java:[117,11] cannot find symbol
+[ERROR]   symbol:   method setUser(com.andrew.BarterPlatform.Entity.User)
+[ERROR]   location: variable l5 of type com.andrew.BarterPlatform.Entity.Listing
+[ERROR] /D:/Projects/Service-Barter-Platform/Backend/BarterPlatform/src/main/java/com/andrew/BarterPlatform/Config/DataInitializer.java:[124,11] cannot find symbol
+[ERROR]   symbol:   method setUser(com.andrew.BarterPlatform.Entity.User)
+[ERROR]   location: variable l6 of type com.andrew.BarterPlatform.Entity.Listing
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException
