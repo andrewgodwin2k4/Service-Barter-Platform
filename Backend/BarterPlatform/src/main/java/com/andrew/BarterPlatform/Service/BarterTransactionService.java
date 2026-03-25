@@ -8,7 +8,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.andrew.BarterPlatform.Dto.BarterTransactionDto;
+import com.andrew.BarterPlatform.Dto.CompleteDto;
 import com.andrew.BarterPlatform.Dto.DeliveryDto;
+import com.andrew.BarterPlatform.Dto.DisputeDto;
+import com.andrew.BarterPlatform.Dto.RevisionDto;
 import com.andrew.BarterPlatform.Entity.BarterTransaction;
 import com.andrew.BarterPlatform.Entity.Listing;
 import com.andrew.BarterPlatform.Entity.User;
@@ -114,12 +117,13 @@ public class BarterTransactionService {
 	
 	}
 	
-	public BarterTransaction markCompleted(Long id) {
+	public BarterTransaction markCompleted(Long id, CompleteDto dto) {
 		
 		BarterTransaction trans = findTransaction(id);
 		if (trans.getStatus() != TransactionStatus.DELIVERED)
 	        throw new IllegalStateException("Only delivered transactions can be completed!");
 		trans.setStatus(TransactionStatus.COMPLETED);
+		trans.setCompletionReview(dto.getCompletionReview());
 		
 		User provider = trans.getProvider();
 		int credits = trans.getCredits();
@@ -131,21 +135,23 @@ public class BarterTransactionService {
 		
 	}
 	
-	public BarterTransaction raiseDispute(Long id) {
+	public BarterTransaction raiseDispute(Long id, DisputeDto dto) {
 		
         BarterTransaction t = findTransaction(id);
         if (t.getStatus() != TransactionStatus.DELIVERED)
 	        throw new IllegalStateException("Only delivered transactions can be disputed!");
         t.setStatus(TransactionStatus.DISPUTED);
+        t.setDisputeReason(dto.getDisputeReason());
         return transRepo.save(t);
         
     }
 
-	public BarterTransaction requestRevision(Long id) {
+	public BarterTransaction requestRevision(Long id, RevisionDto dto) {
 		BarterTransaction t = findTransaction(id);
 		if (t.getStatus() != TransactionStatus.DELIVERED)
 			throw new IllegalStateException("Only delivered transactions can have a revision requested!");
 		t.setStatus(TransactionStatus.REVISION_REQUESTED);
+		t.setRevisionComment(dto.getRevisionComment());
 		return transRepo.save(t);
 	}
 	

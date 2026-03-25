@@ -36,6 +36,21 @@ export default function Transactions() {
   const [hoverScore, setHoverScore] = useState(0);
   const [ratingLoading, setRatingLoading] = useState(false);
 
+  // Revision modal state
+  const [revisionModal, setRevisionModal] = useState(null);
+  const [revisionComment, setRevisionComment] = useState("");
+  const [revisionLoading, setRevisionLoading] = useState(false);
+
+  // Dispute modal state
+  const [disputeModal, setDisputeModal] = useState(null);
+  const [disputeReason, setDisputeReason] = useState("");
+  const [disputeLoading, setDisputeLoading] = useState(false);
+
+  // Complete modal state
+  const [completeModal, setCompleteModal] = useState(null);
+  const [completeReview, setCompleteReview] = useState("");
+  const [completeLoading, setCompleteLoading] = useState(false);
+
   const statusConfig = {
     PENDING: { label: "Pending", color: "bg-amber-100 text-amber-700 dark:bg-amber-500/20 dark:text-amber-400 border-amber-200 dark:border-amber-500/30" },
     ACCEPTED: { label: "Accepted", color: "bg-blue-100 text-blue-700 dark:bg-blue-500/20 dark:text-blue-400 border-blue-200 dark:border-blue-500/30" },
@@ -157,6 +172,66 @@ export default function Transactions() {
     setRatingLoading(false);
   };
 
+  const handleRevisionSubmit = async (e) => {
+    e.preventDefault();
+    if (!revisionModal || !revisionComment.trim()) return;
+    setRevisionLoading(true);
+    try {
+      await api.put(`/transactions/${revisionModal}/revision`, 
+        { revisionComment },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      toast.success("Revision requested successfully!");
+      setRevisionModal(null);
+      setRevisionComment("");
+      fetchData();
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to request revision.");
+    }
+    setRevisionLoading(false);
+  };
+
+  const handleDisputeSubmit = async (e) => {
+    e.preventDefault();
+    if (!disputeModal || !disputeReason.trim()) return;
+    setDisputeLoading(true);
+    try {
+      await api.put(`/transactions/${disputeModal}/dispute`, 
+        { disputeReason },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      toast.success("Dispute raised successfully.");
+      setDisputeModal(null);
+      setDisputeReason("");
+      fetchData();
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to raise dispute.");
+    }
+    setDisputeLoading(false);
+  };
+
+  const handleCompleteSubmit = async (e) => {
+    e.preventDefault();
+    if (!completeModal) return;
+    setCompleteLoading(true);
+    try {
+      await api.put(`/transactions/${completeModal}/complete`, 
+        { completionReview: completeReview.trim() },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      toast.success("Transaction marked as completed.");
+      setCompleteModal(null);
+      setCompleteReview("");
+      fetchData();
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to mark as completed.");
+    }
+    setCompleteLoading(false);
+  };
+
   const getActionButtons = (transaction) => {
     if (!user) return null;
     const isBuyer = transaction.buyer.id === user.id;
@@ -204,15 +279,15 @@ export default function Transactions() {
         if (isBuyer) {
           return (
             <div className="flex flex-wrap gap-2">
-              <Button size="sm" onClick={() => handleAction(transaction.id, "complete")}
+              <Button size="sm" onClick={() => setCompleteModal(transaction.id)}
                 className="bg-emerald-50 hover:bg-emerald-100 text-emerald-600 dark:bg-emerald-500/10 dark:hover:bg-emerald-500/20 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/20 cursor-pointer font-medium shadow-sm transition-colors">
                 <Handshake className="w-4 h-4 mr-1.5" />Complete
               </Button>
-              <Button size="sm" onClick={() => handleAction(transaction.id, "revision", "Request a revision for this work?")}
+              <Button size="sm" onClick={() => setRevisionModal(transaction.id)}
                 className="bg-amber-50 hover:bg-amber-100 text-amber-600 dark:bg-amber-500/10 dark:hover:bg-amber-500/20 dark:text-amber-400 border border-amber-200 dark:border-amber-500/20 cursor-pointer font-medium shadow-sm transition-colors">
                 <RefreshCw className="w-4 h-4 mr-1.5" />Request Revision
               </Button>
-              <Button size="sm" onClick={() => handleAction(transaction.id, "dispute", "Raise a dispute?")}
+              <Button size="sm" onClick={() => setDisputeModal(transaction.id)}
                 className="bg-rose-50 hover:bg-rose-100 text-rose-600 dark:bg-rose-500/10 dark:hover:bg-rose-500/20 dark:text-rose-400 border border-rose-200 dark:border-rose-500/20 cursor-pointer font-medium shadow-sm transition-colors">
                 <AlertTriangle className="w-4 h-4 mr-1.5" />Dispute
               </Button>
@@ -487,9 +562,167 @@ export default function Transactions() {
                disabled={ratingScore === 0 || ratingLoading}
                className="w-full font-bold py-6 rounded-xl shadow-xl shadow-amber-500/20 bg-amber-500 text-white hover:bg-amber-600 transition-all text-lg"
              >
-               {ratingLoading ? "Submitting..." : "Submit Rating"}
+                {ratingLoading ? "Submitting..." : "Submit Rating"}
              </Button>
            </motion.div>
+        </div>
+      )}
+
+      {/* Revision Modal */}
+      {revisionModal && (
+        <div className="fixed inset-0 bg-zinc-900/60 dark:bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-white dark:bg-zinc-900 rounded-3xl p-6 sm:p-8 w-full max-w-lg border border-zinc-200 dark:border-zinc-800 shadow-2xl relative"
+          >
+            <button
+              className="absolute top-4 right-4 sm:top-5 sm:right-5 w-10 h-10 rounded-full bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 flex items-center justify-center text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-50 transition-colors cursor-pointer"
+              onClick={() => { setRevisionModal(null); setRevisionComment(""); }}
+            >
+              <XCircle size={20} />
+            </button>
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-12 h-12 rounded-xl bg-amber-100 dark:bg-amber-500/20 flex items-center justify-center">
+                <RefreshCw className="w-6 h-6 text-amber-600 dark:text-amber-400" />
+              </div>
+              <h2 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">Request Revision</h2>
+            </div>
+            <p className="text-zinc-600 dark:text-zinc-400 text-base mb-6 leading-relaxed">
+              Please explain what needs to be changed or improved in the delivered work. This will be sent to the provider.
+            </p>
+            <form onSubmit={handleRevisionSubmit} className="flex flex-col gap-5">
+              <textarea
+                placeholder="Detail what needs revision..."
+                value={revisionComment}
+                onChange={(e) => setRevisionComment(e.target.value)}
+                rows={4}
+                className="w-full p-4 bg-white dark:bg-black/50 border border-zinc-200 dark:border-zinc-800 rounded-xl focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 text-zinc-900 dark:text-zinc-50 placeholder-zinc-400 transition-all resize-none"
+                required
+              />
+              <div className="flex flex-col-reverse sm:flex-row justify-end gap-3 mt-2">
+                <button
+                  type="button"
+                  onClick={() => { setRevisionModal(null); setRevisionComment(""); }}
+                  className="px-6 py-3.5 bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 rounded-xl font-semibold text-zinc-700 dark:text-zinc-300 transition-colors cursor-pointer w-full sm:w-auto"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={revisionLoading}
+                  className="px-8 py-3.5 bg-amber-500 hover:bg-amber-600 text-white font-semibold rounded-xl shadow-lg shadow-amber-500/20 transition-all cursor-pointer w-full sm:w-auto disabled:opacity-50"
+                >
+                  {revisionLoading ? "Requesting..." : "Submit Revision Request"}
+                </button>
+              </div>
+            </form>
+          </motion.div>
+        </div>
+      )}
+
+      {/* Dispute Modal */}
+      {disputeModal && (
+        <div className="fixed inset-0 bg-zinc-900/60 dark:bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-white dark:bg-zinc-900 rounded-3xl p-6 sm:p-8 w-full max-w-lg border border-zinc-200 dark:border-zinc-800 shadow-2xl relative"
+          >
+            <button
+              className="absolute top-4 right-4 sm:top-5 sm:right-5 w-10 h-10 rounded-full bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 flex items-center justify-center text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-50 transition-colors cursor-pointer"
+              onClick={() => { setDisputeModal(null); setDisputeReason(""); }}
+            >
+              <XCircle size={20} />
+            </button>
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-12 h-12 rounded-xl bg-rose-100 dark:bg-rose-500/20 flex items-center justify-center">
+                <AlertTriangle className="w-6 h-6 text-rose-600 dark:text-rose-400" />
+              </div>
+              <h2 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">Raise Dispute</h2>
+            </div>
+            <p className="text-zinc-600 dark:text-zinc-400 text-base mb-6 leading-relaxed">
+              If the provider failed to deliver the agreed-upon work or is unresponsive, provide a reason below to alert the platform admins.
+            </p>
+            <form onSubmit={handleDisputeSubmit} className="flex flex-col gap-5">
+              <textarea
+                placeholder="Explain the reason for the dispute..."
+                value={disputeReason}
+                onChange={(e) => setDisputeReason(e.target.value)}
+                rows={4}
+                className="w-full p-4 bg-white dark:bg-black/50 border border-zinc-200 dark:border-zinc-800 rounded-xl focus:outline-none focus:border-rose-500 focus:ring-2 focus:ring-rose-500/20 text-zinc-900 dark:text-zinc-50 placeholder-zinc-400 transition-all resize-none"
+                required
+              />
+              <div className="flex flex-col-reverse sm:flex-row justify-end gap-3 mt-2">
+                <button
+                  type="button"
+                  onClick={() => { setDisputeModal(null); setDisputeReason(""); }}
+                  className="px-6 py-3.5 bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 rounded-xl font-semibold text-zinc-700 dark:text-zinc-300 transition-colors cursor-pointer w-full sm:w-auto"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={disputeLoading}
+                  className="px-8 py-3.5 bg-rose-500 hover:bg-rose-600 text-white font-semibold rounded-xl shadow-lg shadow-rose-500/20 transition-all cursor-pointer w-full sm:w-auto disabled:opacity-50"
+                >
+                  {disputeLoading ? "Raising Dispute..." : "Raise Dispute"}
+                </button>
+              </div>
+            </form>
+          </motion.div>
+        </div>
+      )}
+
+      {/* Complete Modal */}
+      {completeModal && (
+        <div className="fixed inset-0 bg-zinc-900/60 dark:bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-white dark:bg-zinc-900 rounded-3xl p-6 sm:p-8 w-full max-w-lg border border-zinc-200 dark:border-zinc-800 shadow-2xl relative"
+          >
+            <button
+              className="absolute top-4 right-4 sm:top-5 sm:right-5 w-10 h-10 rounded-full bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 flex items-center justify-center text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-50 transition-colors cursor-pointer"
+              onClick={() => { setCompleteModal(null); setCompleteReview(""); }}
+            >
+              <XCircle size={20} />
+            </button>
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-12 h-12 rounded-xl bg-emerald-100 dark:bg-emerald-500/20 flex items-center justify-center">
+                <Handshake className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
+              </div>
+              <h2 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">Complete Order</h2>
+            </div>
+            <p className="text-zinc-600 dark:text-zinc-400 text-base mb-6 leading-relaxed">
+              Are you satisfied with the delivered work? Leave a review for the provider below to mark the transaction as completed.
+            </p>
+            <form onSubmit={handleCompleteSubmit} className="flex flex-col gap-5">
+              <textarea
+                placeholder="Write your review here..."
+                value={completeReview}
+                onChange={(e) => setCompleteReview(e.target.value)}
+                rows={4}
+                className="w-full p-4 bg-white dark:bg-black/50 border border-zinc-200 dark:border-zinc-800 rounded-xl focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 text-zinc-900 dark:text-zinc-50 placeholder-zinc-400 transition-all resize-none"
+              />
+              <div className="flex flex-col-reverse sm:flex-row justify-end gap-3 mt-2">
+                <button
+                  type="button"
+                  onClick={() => { setCompleteModal(null); setCompleteReview(""); }}
+                  className="px-6 py-3.5 bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 rounded-xl font-semibold text-zinc-700 dark:text-zinc-300 transition-colors cursor-pointer w-full sm:w-auto"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={completeLoading}
+                  className="px-8 py-3.5 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold rounded-xl shadow-lg shadow-emerald-500/20 transition-all cursor-pointer w-full sm:w-auto disabled:opacity-50"
+                >
+                  {completeLoading ? "Completing..." : "Complete Order"}
+                </button>
+              </div>
+            </form>
+          </motion.div>
         </div>
       )}
     </div>
@@ -579,6 +812,45 @@ function TransactionCard({ transaction, isBuyer, statusConfig, actionButtons, in
               </div>
             )}
           </div>
+
+          {/* Dispute Link Section */}
+          {transaction.status === "DISPUTED" && transaction.disputeReason && (
+            <div className="mt-5 p-4 bg-rose-50 dark:bg-rose-500/10 border border-rose-200 dark:border-rose-500/20 rounded-2xl">
+              <div className="flex items-center gap-2 mb-2">
+                <AlertTriangle className="w-4 h-4 text-rose-600 dark:text-rose-400" />
+                <span className="text-sm font-bold text-rose-900 dark:text-rose-50">Dispute Reason</span>
+              </div>
+              <p className="text-sm text-rose-700 dark:text-rose-300 italic">
+                "{transaction.disputeReason}"
+              </p>
+            </div>
+          )}
+
+          {/* Revision Link Section */}
+          {transaction.status === "REVISION_REQUESTED" && transaction.revisionComment && (
+            <div className="mt-5 p-4 bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/20 rounded-2xl">
+              <div className="flex items-center gap-2 mb-2">
+                <RefreshCw className="w-4 h-4 text-amber-600 dark:text-amber-400" />
+                <span className="text-sm font-bold text-amber-900 dark:text-amber-50">Revision Request</span>
+              </div>
+              <p className="text-sm text-amber-700 dark:text-amber-300 italic">
+                "{transaction.revisionComment}"
+              </p>
+            </div>
+          )}
+
+          {/* Completion Review Section */}
+          {transaction.status === "COMPLETED" && transaction.completionReview && (
+            <div className="mt-5 p-4 bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20 rounded-2xl">
+              <div className="flex items-center gap-2 mb-2">
+                <Handshake className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                <span className="text-sm font-bold text-emerald-900 dark:text-emerald-50">Completion Review</span>
+              </div>
+              <p className="text-sm text-emerald-700 dark:text-emerald-300 italic">
+                "{transaction.completionReview}"
+              </p>
+            </div>
+          )}
 
           {/* Delivery Link Section */}
           {hasDelivery && (

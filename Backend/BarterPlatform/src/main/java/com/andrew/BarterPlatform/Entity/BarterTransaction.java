@@ -57,6 +57,15 @@ public class BarterTransaction {
 	
 	private String deliveryLink;
 	private String deliveryNote;
+    
+    @Column(columnDefinition = "TEXT")
+    private String revisionComment;
+    
+    @Column(columnDefinition = "TEXT")
+    private String disputeReason;
+    
+    @Column(columnDefinition = "TEXT")
+    private String completionReview;
 
 	
 	@PreUpdate

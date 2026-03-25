@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class DataInitializer implements CommandLineRunner {
@@ -31,15 +32,48 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        if (userRepository.count() > 0) {
+        org.springframework.security.crypto.password.PasswordEncoder encoder = new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder();
+        String defaultBcryptPw = encoder.encode("password123");
+
+        User ahmed = new User("ahmed", "ahmed@xerv.dev", defaultBcryptPw, "Ahmed", "Cloud infrastructure specialist and cybersecurity enthusiast.");
+        ahmed.setCredits(150);
+        ahmed.setAverageRating(4.6);
+        ahmed.setTotalRatings(5);
+
+        // Explicitly ensure 'ahmed' exists as requested
+        if (userRepository.findByUsername("ahmed").isEmpty()) {
+            System.out.println("Adding user 'ahmed' as requested...");
+            userRepository.save(ahmed);
+            
+            // Add a listing for him too
+            Listing cloudListing = new Listing();
+            cloudListing.setTitle("AWS Cloud Infrastructure Setup");
+            cloudListing.setDescription("I will architect and configure your AWS environment using Terraform and best practices for security and scalability.");
+            cloudListing.setCategory(SkillCategory.WEB_DEVELOPMENT);
+            cloudListing.setCreditValue(25);
+            cloudListing.setOwner(ahmed);
+            listingRepository.save(cloudListing);
+
+            // Add a transaction for him too
+            Optional<User> andrewOpt = userRepository.findByUsername("andrew");
+            Optional<Listing> l1Opt = listingRepository.findAll().stream()
+                .filter(l -> l.getTitle().contains("Next.js"))
+                .findFirst();
+
+            if (andrewOpt.isPresent() && l1Opt.isPresent()) {
+                BarterTransaction ahmedTx = createTx(ahmed, andrewOpt.get(), l1Opt.get(), 12, TransactionStatus.COMPLETED, 5, "Ahmed: This code is exactly what I needed for my cloud project!", LocalDateTime.now().minusDays(3));
+                transactionRepository.save(ahmedTx);
+            }
+            
+            System.out.println("User 'ahmed', his listing, and his first transaction successfully added!");
+        }
+
+        if (userRepository.count() > 1) { // Changed to 1 because 'ahmed' might have just been added
             System.out.println("Database already populated. Skipping massive seed data.");
             return;
         }
 
         System.out.println("Seeding database with MASSIVE dummy data for Andrew's analytics dashboard...");
-
-        org.springframework.security.crypto.password.PasswordEncoder encoder = new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder();
-        String defaultBcryptPw = encoder.encode("password123");
 
         // 1. CREATE USERS
         User andrew = new User("andrew", "andrew@xerv.dev", defaultBcryptPw, "Andrew", "Full-stack developer and AI engineer. Specializing in highly optimized React applications and robust Spring Boot microservices.");
@@ -67,7 +101,9 @@ public class DataInitializer implements CommandLineRunner {
         daniel.setAverageRating(4.8);
         daniel.setTotalRatings(19);
 
-        userRepository.saveAll(Arrays.asList(andrew, priya, marcus, sarah, daniel));
+        User ahmedObj = userRepository.findByUsername("ahmed").orElse(ahmed);
+
+        userRepository.saveAll(Arrays.asList(andrew, priya, marcus, sarah, daniel, ahmedObj));
 
         // 2. CREATE LISTINGS
         List<Listing> listings = new ArrayList<>();
@@ -127,6 +163,14 @@ public class DataInitializer implements CommandLineRunner {
         l7.setCreditValue(20);
         l7.setOwner(daniel);
         listings.add(l7);
+
+        Listing l8 = new Listing();
+        l8.setTitle("AWS Cloud Infrastructure Setup");
+        l8.setDescription("I will architect and configure your AWS environment using Terraform and best practices for security and scalability.");
+        l8.setCategory(SkillCategory.WEB_DEVELOPMENT);
+        l8.setCreditValue(25);
+        l8.setOwner(ahmed);
+        listings.add(l8);
 
         listingRepository.saveAll(listings);
 

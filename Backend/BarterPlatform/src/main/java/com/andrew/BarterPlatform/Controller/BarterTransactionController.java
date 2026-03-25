@@ -5,7 +5,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.andrew.BarterPlatform.Dto.BarterTransactionDto;
+import com.andrew.BarterPlatform.Dto.CompleteDto;
 import com.andrew.BarterPlatform.Dto.DeliveryDto;
+import com.andrew.BarterPlatform.Dto.DisputeDto;
+import com.andrew.BarterPlatform.Dto.RevisionDto;
 import com.andrew.BarterPlatform.Entity.BarterTransaction;
 import com.andrew.BarterPlatform.Service.BarterTransactionService;
 
@@ -55,18 +58,18 @@ public class BarterTransactionController {
     }
 
     @PutMapping("/{id}/complete")
-    public ResponseEntity<BarterTransaction> complete(@PathVariable Long id) {
-        return ResponseEntity.ok(transactionService.markCompleted(id));
+    public ResponseEntity<BarterTransaction> complete(@PathVariable Long id, @RequestBody CompleteDto dto) {
+        return ResponseEntity.ok(transactionService.markCompleted(id, dto));
     }
 
 	@PutMapping("/{id}/revision")
-	public ResponseEntity<BarterTransaction> requestRevision(@PathVariable Long id) {
-		return ResponseEntity.ok(transactionService.requestRevision(id));
+	public ResponseEntity<BarterTransaction> requestRevision(@PathVariable Long id, @RequestBody RevisionDto dto) {
+		return ResponseEntity.ok(transactionService.requestRevision(id, dto));
 	}
 
     @PutMapping("/{id}/dispute")
-    public ResponseEntity<BarterTransaction> dispute(@PathVariable Long id) {
-        return ResponseEntity.ok(transactionService.raiseDispute(id));
+    public ResponseEntity<BarterTransaction> dispute(@PathVariable Long id, @RequestBody DisputeDto dto) {
+        return ResponseEntity.ok(transactionService.raiseDispute(id, dto));
     }
     
     @PutMapping("/{id}/rate")
