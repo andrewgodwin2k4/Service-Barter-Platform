@@ -10,6 +10,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ProtectedRoute from "./components/ProtectedRoute";
 import OfferServices from "./pages/OfferServices";
+import Messages from "./pages/Messages";
 
 import { ThemeProvider } from "./components/ThemeProvider";
 
@@ -29,6 +30,7 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/offer-services" element={<ProtectedRoute><OfferServices /></ProtectedRoute>} />
+              <Route path="/messages" element={<ProtectedRoute><Messages /></ProtectedRoute>} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </main>

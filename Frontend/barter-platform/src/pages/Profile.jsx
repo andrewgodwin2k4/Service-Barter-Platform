@@ -5,7 +5,7 @@ import { AuthContext } from "@/context/AuthContext";
 import {
   User, Mail, AtSign, Coins, Pencil, X, RefreshCw, FileText,
   TrendingUp, TrendingDown, Package, CheckCircle, Clock, ArrowUpRight,
-  Layers, BarChart3, Activity, Wallet, Medal, Sparkles, Star, Upload
+  Layers, BarChart3, Activity, Wallet, Medal, Sparkles, Star, Upload, MessageCircle
 } from "lucide-react";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
@@ -259,6 +259,16 @@ export default function Profile() {
                 </div>
               </div>
               
+                {!isOwnProfile && (
+                  <Link 
+                    to={`/messages?userId=${user.id}`}
+                    className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-primary hover:bg-primary/90 text-white font-bold text-sm mb-4 transition-colors shadow-lg shadow-primary/20 shrink-0"
+                  >
+                    <MessageCircle size={18} />
+                    Message
+                  </Link>
+                )}
+                
                 {isOwnProfile && (
                   <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => setIsEditing(!isEditing)} className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-zinc-900 hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-200 text-white dark:text-black font-bold text-sm mb-4 transition-colors shadow-lg shadow-black/10 dark:shadow-white/10 shrink-0">
                     {isEditing ? <X size={18} /> : <Pencil size={18} />}

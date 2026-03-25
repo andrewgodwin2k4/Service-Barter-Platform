@@ -1,7 +1,8 @@
 import { NavLink, Link, useNavigate } from "react-router-dom";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
+import api from "@/lib/api";
 import { Button } from "@/components/ui/button";
-import { BarChart3, User, Home, List, ClipboardList, Menu, X, Hexagon } from "lucide-react";
+import { BarChart3, User, Home, List, ClipboardList, Menu, X, Hexagon, MessageCircle } from "lucide-react";
 import { AuthContext } from "@/context/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
 import { ThemeToggle } from "../ThemeToggle";
@@ -11,6 +12,7 @@ const links = [
   { path: "/listings", label: "Listings", icon: <List size={18} /> },
   { path: "/transactions", label: "Transactions", icon: <BarChart3 size={18} /> },
   { path: "/offer-services", label: "My Services", icon: <ClipboardList size={18} /> },
+  { path: "/messages", label: "Messages", icon: <MessageCircle size={18} /> },
   { path: "/profile", label: "Profile", icon: <User size={18} /> },
 ];
 
@@ -18,6 +20,24 @@ export default function Navbar() {
   const { token, logout } = useContext(AuthContext);
   const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  useEffect(() => {
+    if (!token) return;
+    const fetchUnread = async () => {
+      try {
+        const res = await api.get("/chat/unread", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setUnreadCount(res.data);
+      } catch (err) {
+        console.error("Unread count fetch failed", err);
+      }
+    };
+    fetchUnread();
+    const interval = setInterval(fetchUnread, 3000);
+    return () => clearInterval(interval);
+  }, [token]);
 
   const handleLogout = () => {
     logout();
@@ -52,7 +72,14 @@ export default function Navbar() {
                 }`
               }
             >
-              {icon}
+              <div className="relative">
+                {icon}
+                {label === "Messages" && unreadCount > 0 && (
+                  <span className="absolute -top-1.5 -right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-black text-white ring-2 ring-white dark:ring-black">
+                    {unreadCount > 9 ? "9+" : unreadCount}
+                  </span>
+                )}
+              </div>
               {label}
             </NavLink>
           ))}
@@ -119,6 +146,11 @@ export default function Navbar() {
                 >
                   {icon}
                   {label}
+                  {label === "Messages" && unreadCount > 0 && (
+                    <span className="ml-auto flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] font-black text-white">
+                      {unreadCount > 9 ? "9+" : unreadCount}
+                    </span>
+                  )}
                 </NavLink>
               ))}
 

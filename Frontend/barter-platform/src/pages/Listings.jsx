@@ -1,7 +1,7 @@
 import { useEffect, useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Search, RefreshCw, X, ArrowRight, Coins, Tag, Hexagon, Star } from "lucide-react";
+import { Search, RefreshCw, X, ArrowRight, Coins, Tag, Hexagon, Star, MessageCircle } from "lucide-react";
 import api from "@/lib/api";
 import { AuthContext } from "@/context/AuthContext";
 import { toast } from "sonner";
@@ -239,14 +239,22 @@ export default function Listings() {
               </div>
             </div>
 
-            <Button
-              onClick={handleRequest}
-              className="w-full font-bold py-6 rounded-xl shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all duration-300 text-lg"
-              disabled={requesting || !currentUserId}
-              size="lg"
-            >
-              {requesting ? "Requesting..." : "Request Service"}
-            </Button>
+            <div className="flex gap-3">
+              <Button
+                onClick={handleRequest}
+                className="flex-1 font-bold py-6 rounded-xl shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all duration-300 text-lg"
+                disabled={requesting || !currentUserId}
+                size="lg"
+              >
+                {requesting ? "Requesting..." : "Request Service"}
+              </Button>
+              <Link
+                to={`/messages?userId=${selectedListing.owner.id}`}
+                className="px-6 py-6 rounded-xl border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-all duration-300 flex items-center justify-center"
+              >
+                <MessageCircle size={24} className="text-primary" />
+              </Link>
+            </div>
           </motion.div>
         </div>
       )}
