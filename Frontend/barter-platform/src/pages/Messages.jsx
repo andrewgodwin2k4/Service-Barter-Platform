@@ -210,11 +210,11 @@ export default function Messages() {
   }
 
   return (
-    <div className="flex-1 flex overflow-hidden bg-zinc-50 dark:bg-black h-[calc(100vh-64px)]">
+    <div className="flex-1 flex overflow-hidden bg-background h-[calc(100vh-64px)]">
       <div className="flex w-full overflow-hidden">
         
         {/* Sidebar */}
-        <div className={`w-full sm:w-96 border-r border-zinc-200 dark:border-zinc-800 flex flex-col bg-white dark:bg-zinc-900 shadow-xl z-20 transition-all duration-300 ${mobileShowThread ? "hidden sm:flex" : "flex"}`}>
+        <div className={`w-full sm:w-96 border-r border-border flex flex-col bg-card shadow-xl z-20 transition-all duration-300 ${mobileShowThread ? "hidden sm:flex" : "flex"}`}>
           {/* Header */}
           <div className="p-5 sm:p-6 border-b border-zinc-100 dark:border-zinc-800">
             <div className="flex items-center justify-between mb-5">
@@ -359,11 +359,11 @@ export default function Messages() {
         </div>
 
         {/* Chat Thread */}
-        <div className={`flex-1 flex flex-col bg-white dark:bg-black relative ${!mobileShowThread ? "hidden sm:flex" : "flex"}`}>
+        <div className={`flex-1 flex flex-col bg-background relative ${!mobileShowThread ? "hidden sm:flex" : "flex"}`}>
           {activeChat ? (
             <>
               {/* Header */}
-              <div className="py-4 px-6 border-b border-zinc-100 dark:border-zinc-800 flex items-center justify-between bg-white/80 dark:bg-black/80 backdrop-blur-md z-10">
+              <div className="py-4 px-6 border-b border-border flex items-center justify-between bg-card/80 backdrop-blur-md z-10">
                 <div className="flex items-center gap-4">
                   <button
                     className="sm:hidden p-2 rounded-xl hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-500 cursor-pointer"
@@ -443,8 +443,8 @@ export default function Messages() {
                               <div
                                 className={`px-4 py-2.5 shadow-sm text-sm relative group
                                   ${isMe
-                                    ? `bg-zinc-200 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 ${isLastInGroup ? "rounded-2xl rounded-br-none" : "rounded-2xl"}`
-                                    : `bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 ${isLastInGroup ? "rounded-2xl rounded-bl-none" : "rounded-2xl"}`
+                                    ? `bg-secondary dark:bg-zinc-800 text-foreground dark:text-zinc-100 ${isLastInGroup ? "rounded-2xl rounded-br-none" : "rounded-2xl"}`
+                                    : `bg-card dark:bg-zinc-900 border border-border text-foreground dark:text-zinc-100 ${isLastInGroup ? "rounded-2xl rounded-bl-none" : "rounded-2xl"}`
                                   }`}
                               >
                                 <p className="leading-relaxed whitespace-pre-wrap">{msg.content}</p>
@@ -466,8 +466,8 @@ export default function Messages() {
               </div>
 
               {/* Input Area */}
-              <div className="p-6 bg-white dark:bg-black border-t border-zinc-100 dark:border-zinc-800">
-                <form onSubmit={handleSend} className="max-w-4xl mx-auto flex items-end gap-3 bg-zinc-100 dark:bg-zinc-900 p-2 rounded-[2rem] border border-zinc-200 dark:border-zinc-800 transition-all focus-within:ring-2 focus-within:ring-primary/20">
+              <div className="p-6 bg-card border-t border-border">
+                <form onSubmit={handleSend} className="max-w-4xl mx-auto flex items-end gap-3 bg-secondary p-2 rounded-[2rem] border border-border transition-all focus-within:ring-2 focus-within:ring-primary/20">
                   <textarea
                     rows={1}
                     value={newMessage}

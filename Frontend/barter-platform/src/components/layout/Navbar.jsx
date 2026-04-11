@@ -46,19 +46,21 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="sticky top-0 z-50 bg-white/80 dark:bg-black/80 backdrop-blur-md border-b border-zinc-200 dark:border-zinc-800 transition-colors duration-300">
-      <div className="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 lg:px-8 py-3">
-        {/* Brand */}
-        <Link to="/" className="flex items-center gap-2 group">
-          <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center shadow-sm">
-            <Hexagon className="w-5 h-5 text-primary-foreground fill-primary-foreground" />
-          </div>
-          <span className="text-xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
-            XERV
-          </span>
-        </Link>
+    <nav className="sticky top-0 z-50 bg-card/80 backdrop-blur-md border-b border-border transition-colors duration-300">
+      <div className="w-full flex items-center px-4 sm:px-10 py-3">
+        {/* Left Section - Brand */}
+        <div className="flex-1 flex justify-start">
+          <Link to="/" className="flex items-center gap-2 group">
+            <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center shadow-sm">
+              <Hexagon className="w-5 h-5 text-primary-foreground fill-primary-foreground" />
+            </div>
+            <span className="text-xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
+              XERV
+            </span>
+          </Link>
+        </div>
 
-        {/* Desktop Nav */}
+        {/* Center Section - Desktop Nav */}
         <div className="hidden lg:flex items-center gap-1">
           {links.map(({ path, label, icon }) => (
             <NavLink
@@ -85,38 +87,40 @@ export default function Navbar() {
           ))}
         </div>
 
-        {/* Desktop Auth Button & Theme Toggle */}
-        <div className="hidden lg:flex items-center gap-3">
-          <ThemeToggle />
-          
-          {token ? (
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={handleLogout}
-              className="border-zinc-200 dark:border-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-700 dark:text-zinc-300"
-            >
-              Logout
-            </Button>
-          ) : (
-            <Link to="/login">
-              <Button size="sm" className="font-medium shadow-sm">
-                Login
+        {/* Right Section - Desktop Auth & Theme Toggle */}
+        <div className="flex-1 flex justify-end items-center gap-3">
+          <div className="hidden lg:flex items-center gap-3">
+            <ThemeToggle />
+            
+            {token ? (
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={handleLogout}
+                className="border-zinc-200 dark:border-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-700 dark:text-zinc-300"
+              >
+                Logout
               </Button>
-            </Link>
-          )}
-        </div>
+            ) : (
+              <Link to="/login">
+                <Button size="sm" className="font-medium shadow-sm">
+                  Login
+                </Button>
+              </Link>
+            )}
+          </div>
 
-        {/* Mobile Controls */}
-        <div className="lg:hidden flex items-center gap-2">
-          <ThemeToggle />
-          <button
-            className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 p-2"
-            onClick={() => setMobileOpen(!mobileOpen)}
-            aria-label="Toggle menu"
-          >
-            {mobileOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+          {/* Mobile Toggle Icons */}
+          <div className="lg:hidden flex items-center gap-2">
+            <ThemeToggle />
+            <button
+              className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 p-2"
+              onClick={() => setMobileOpen(!mobileOpen)}
+              aria-label="Toggle menu"
+            >
+              {mobileOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
         </div>
       </div>
 

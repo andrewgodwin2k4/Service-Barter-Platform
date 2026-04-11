@@ -60,7 +60,7 @@ export default function Home() {
   const { scrollYProgress: cardsProgress } = useScroll({ target: parallaxRef, offset: ["start end", "end start"] });
 
   return (
-    <div ref={containerRef} className="relative bg-white dark:bg-black transition-colors duration-300 font-sans selection:bg-primary selection:text-white">
+    <div ref={containerRef} className="relative bg-background text-foreground transition-colors duration-300 font-sans selection:bg-primary selection:text-white">
       
       {/* ═══════ HERO SECTION ═══════ */}
       <section className="relative min-h-[95vh] flex items-center justify-center px-4 sm:px-6 lg:px-8 pt-20 pb-32 overflow-hidden">
@@ -107,7 +107,7 @@ export default function Home() {
                  </motion.button>
               </Link>
               <Link to="/listings">
-                 <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="flex items-center justify-center gap-2 h-16 px-10 rounded-2xl text-lg font-bold bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white hover:bg-zinc-50 dark:hover:bg-zinc-800 w-full transition-colors shadow-lg">
+                  <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="flex items-center justify-center gap-2 h-16 px-10 rounded-2xl text-lg font-bold bg-card border border-border text-foreground hover:bg-secondary transition-colors shadow-lg">
                   <Globe className="w-5 h-5" /> Explore Network
                  </motion.button>
               </Link>
@@ -157,7 +157,7 @@ export default function Home() {
       </section>
 
       {/* ═══════ SINGLE MARQUEE ═══════ */}
-      <section className="py-16 border-y border-zinc-100 dark:border-zinc-900 bg-white dark:bg-black overflow-hidden relative flex flex-col gap-6">
+      <section className="py-16 border-y border-border bg-background overflow-hidden relative flex flex-col gap-6">
         <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-white dark:from-black to-transparent z-10 pointer-events-none" />
         <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-white dark:from-black to-transparent z-10 pointer-events-none" />
 
@@ -195,7 +195,7 @@ export default function Home() {
              <motion.div key={step.tag} variants={fadeUp} className="relative z-10 flex flex-col items-center text-center group">
                 <div className="w-48 h-48 mb-10 relative flex items-center justify-center">
                   <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/10 rounded-full blur-2xl transition-all duration-500" />
-                  <motion.div whileHover={{ rotate: 180 }} transition={{ duration: 0.8, ease: "easeInOut" }} className="w-32 h-32 rounded-[2rem] bg-white dark:bg-zinc-900 border-2 border-zinc-200 dark:border-zinc-800 shadow-2xl flex items-center justify-center z-10 text-primary">
+                  <motion.div whileHover={{ rotate: 180 }} transition={{ duration: 0.8, ease: "easeInOut" }} className="w-32 h-32 rounded-[2rem] bg-card border-2 border-border shadow-2xl flex items-center justify-center z-10 text-primary">
                     <div className="scale-[2.5]">{step.icon}</div>
                   </motion.div>
                   <div className="absolute -top-2 -right-2 w-16 h-16 bg-primary rounded-full flex items-center justify-center font-black text-white text-2xl z-20 shadow-xl shadow-primary/40 pt-1 border-4 border-white dark:border-black">
@@ -210,7 +210,7 @@ export default function Home() {
       </section>
 
       {/* ═══════ PARALLAX STACKING CARDS (REPLACES BENTO) ═══════ */}
-      <section ref={parallaxRef} className="py-24 px-4 sm:px-6 lg:px-8 bg-zinc-50 dark:bg-zinc-950 border-y border-zinc-200 dark:border-zinc-900 relative">
+      <section ref={parallaxRef} className="py-24 px-4 sm:px-6 lg:px-8 bg-secondary border-y border-border relative">
         <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-16 relative">
            
            {/* Sticky Left Sidebar */}
@@ -238,7 +238,7 @@ export default function Home() {
               
               <motion.div 
                 style={{ y: useTransform(cardsProgress, [0, 1], ["0%", "-5%"]) }}
-                className="bg-white dark:bg-black rounded-[3rem] p-8 sm:p-12 border border-zinc-200 dark:border-zinc-800 shadow-2xl sticky top-32 overflow-hidden group"
+                 className="bg-card rounded-[3rem] p-8 sm:p-12 border border-border shadow-2xl sticky top-32 overflow-hidden group"
               >
                 <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent z-0" />
                 <h3 className="relative z-10 text-4xl font-bold mb-4 text-zinc-900 dark:text-white tracking-tight">Built-in Delivery Tracking</h3>

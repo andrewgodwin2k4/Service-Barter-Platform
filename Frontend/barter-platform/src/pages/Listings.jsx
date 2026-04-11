@@ -85,14 +85,14 @@ export default function Listings() {
   }
 
   return (
-    <section className="min-h-screen px-4 sm:px-6 lg:px-8 py-8 sm:py-12 bg-white dark:bg-black transition-colors duration-300">
+    <section className="min-h-screen px-4 sm:px-6 lg:px-8 py-8 sm:py-12 bg-background transition-colors duration-300">
       {/* Header */}
       <div className="max-w-6xl mx-auto mb-8 sm:mb-12 text-center">
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 tracking-tight text-zinc-900 dark:text-zinc-50"
+          className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 tracking-tight text-foreground"
         >
           Explore <span className="text-primary">Services</span>
         </motion.h1>
@@ -100,7 +100,7 @@ export default function Listings() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="text-zinc-600 dark:text-zinc-400 max-w-xl mx-auto text-base sm:text-lg"
+          className="text-muted-foreground max-w-xl mx-auto text-base sm:text-lg font-medium"
         >
           Browse digital services offered by the community — logos, websites, marketing, and more.
         </motion.p>
@@ -111,13 +111,13 @@ export default function Listings() {
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, delay: 0.2 }}
-        className="max-w-2xl mx-auto flex items-center gap-3 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl px-5 py-4 mb-10 sm:mb-14 shadow-sm focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary transition-all duration-200"
+        className="max-w-2xl mx-auto flex items-center gap-3 bg-card border border-border rounded-2xl px-5 py-4 mb-10 sm:mb-14 shadow-sm focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary transition-all duration-200"
       >
         <Search className="w-5 h-5 text-zinc-400 shrink-0" />
         <input
           type="text"
           placeholder="Search services..."
-          className="flex-1 bg-transparent outline-none text-zinc-900 dark:text-zinc-50 placeholder-zinc-400 text-base min-w-0"
+          className="flex-1 bg-transparent outline-none text-foreground placeholder-muted-foreground text-base min-w-0 font-medium"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
@@ -134,7 +134,7 @@ export default function Listings() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: Math.min(i * 0.05, 0.3), duration: 0.4 }}
-              className="group bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-6 sm:p-7 flex flex-col transition-all duration-300 shadow-sm hover:shadow-xl hover:-translate-y-1"
+              className="group bg-card border border-border rounded-3xl p-6 sm:p-7 flex flex-col transition-all duration-300 shadow-sm hover:shadow-xl hover:-translate-y-1"
             >
               <div className="flex items-start justify-between gap-3 mb-4">
                 <h3 className="text-lg sm:text-xl font-bold text-zinc-900 dark:text-zinc-50 line-clamp-1">{listing.title}</h3>
@@ -207,8 +207,8 @@ export default function Listings() {
             <h2 className="text-2xl sm:text-3xl font-bold mb-3 text-zinc-900 dark:text-zinc-50 pr-10">{selectedListing.title}</h2>
             <p className="text-zinc-600 dark:text-zinc-400 mb-6 text-base leading-relaxed">{selectedListing.description || "No description provided."}</p>
 
-            <div className="flex flex-wrap gap-3 mb-6 pb-6 border-b border-zinc-100 dark:border-zinc-800">
-              <span className="flex items-center gap-1.5 text-sm font-medium bg-zinc-100 dark:bg-zinc-800 px-3 py-1.5 rounded-lg text-zinc-700 dark:text-zinc-300">
+            <div className="flex flex-wrap gap-3 mb-6 pb-6 border-b border-border">
+              <span className="flex items-center gap-1.5 text-sm font-medium bg-secondary px-3 py-1.5 rounded-lg text-foreground">
                 <Tag size={16} className="text-primary" />
                 {selectedListing.category?.replace(/_/g, " ")}
               </span>
