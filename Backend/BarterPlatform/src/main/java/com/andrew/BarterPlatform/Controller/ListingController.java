@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import java.security.Principal;
 
 import com.andrew.BarterPlatform.Dto.ListingDto;
 import com.andrew.BarterPlatform.Dto.ListingResultDto;
@@ -35,6 +36,11 @@ public class ListingController {
 	    return new ResponseEntity<>(listingService.getAllListings(search), HttpStatus.OK);
 	}
 
+	@GetMapping("/recommended")
+	public ResponseEntity<List<Listing>> getRecommendedListings(@RequestParam Long userId, @RequestParam(required = false) String search) {
+	    return new ResponseEntity<>(listingService.getRecommendedListings(userId, search), HttpStatus.OK);
+	}
+
     @GetMapping("/{id}")
     public ResponseEntity<Listing> getListingById(@PathVariable Long id) {
         return new ResponseEntity<>(listingService.getListingById(id), HttpStatus.OK);
@@ -46,12 +52,20 @@ public class ListingController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Listing> updateListing(@PathVariable Long id, @RequestBody ListingDto dto) {
+    public ResponseEntity<Listing> updateListing(@PathVariable Long id, @RequestBody ListingDto dto, Principal principal) {
+        Listing listing = listingService.getListingById(id);
+        if (!listing.getOwner().getEmail().equals(principal.getName())) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
         return new ResponseEntity<>(listingService.updateListing(id, dto), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteListing(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteListing(@PathVariable Long id, Principal principal) {
+        Listing listing = listingService.getListingById(id);
+        if (!listing.getOwner().getEmail().equals(principal.getName())) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
         listingService.deleteListing(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

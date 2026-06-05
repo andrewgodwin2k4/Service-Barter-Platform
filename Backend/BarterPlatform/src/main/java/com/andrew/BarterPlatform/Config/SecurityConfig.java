@@ -41,8 +41,9 @@ public class SecurityConfig {
             	        "/webjars/**",
             	        "/configuration/**"
             	    ).permitAll()
+            	    .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
             	    .requestMatchers(HttpMethod.GET, "/listings/**", "/users/avatar/**").permitAll()
-            	    .requestMatchers("/listings/**").authenticated()
+            	    .requestMatchers("/listings/**", "/transactions/**", "/chat-messages/**").authenticated()
             	    .anyRequest().authenticated()
             )
 

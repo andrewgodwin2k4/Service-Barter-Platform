@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import com.andrew.BarterPlatform.Dto.BarterTransactionDto;
 import com.andrew.BarterPlatform.Dto.CompleteDto;
 import com.andrew.BarterPlatform.Dto.DeliveryDto;
-import com.andrew.BarterPlatform.Dto.DisputeDto;
 import com.andrew.BarterPlatform.Dto.RevisionDto;
 import com.andrew.BarterPlatform.Entity.BarterTransaction;
 import com.andrew.BarterPlatform.Service.BarterTransactionService;
@@ -20,12 +19,12 @@ import lombok.RequiredArgsConstructor;
 public class BarterTransactionController {
 
     private final BarterTransactionService transactionService;
-    
+
     @GetMapping
     public ResponseEntity<List<BarterTransaction>> getAllTransactions() {
         return ResponseEntity.ok(transactionService.getAllTransactions());
     }
-    
+
     @GetMapping("/user/{buyerId}")
     public ResponseEntity<List<BarterTransaction>> getUserTransactions(@PathVariable Long buyerId) {
         return ResponseEntity.ok(transactionService.getTransactionsByBuyer(buyerId));
@@ -36,7 +35,6 @@ public class BarterTransactionController {
         return ResponseEntity.ok(transactionService.getRequestsForProvider(providerId));
     }
 
-
     @PostMapping
     public ResponseEntity<BarterTransaction> create(@RequestBody BarterTransactionDto dto) {
         return new ResponseEntity<>(transactionService.createTransaction(dto), HttpStatus.CREATED);
@@ -46,7 +44,7 @@ public class BarterTransactionController {
     public ResponseEntity<BarterTransaction> accept(@PathVariable Long id) {
         return ResponseEntity.ok(transactionService.acceptTransaction(id));
     }
-    
+
     @PutMapping("/{id}/reject")
     public ResponseEntity<BarterTransaction> reject(@PathVariable Long id) {
         return ResponseEntity.ok(transactionService.rejectTransaction(id));
@@ -62,21 +60,16 @@ public class BarterTransactionController {
         return ResponseEntity.ok(transactionService.markCompleted(id, dto));
     }
 
-	@PutMapping("/{id}/revision")
-	public ResponseEntity<BarterTransaction> requestRevision(@PathVariable Long id, @RequestBody RevisionDto dto) {
-		return ResponseEntity.ok(transactionService.requestRevision(id, dto));
-	}
-
-    @PutMapping("/{id}/dispute")
-    public ResponseEntity<BarterTransaction> dispute(@PathVariable Long id, @RequestBody DisputeDto dto) {
-        return ResponseEntity.ok(transactionService.raiseDispute(id, dto));
+    @PutMapping("/{id}/revision")
+    public ResponseEntity<BarterTransaction> requestRevision(@PathVariable Long id, @RequestBody RevisionDto dto) {
+        return ResponseEntity.ok(transactionService.requestRevision(id, dto));
     }
-    
+
     @PutMapping("/{id}/rate")
     public ResponseEntity<BarterTransaction> rate(@PathVariable Long id, @RequestParam Integer score) {
         return ResponseEntity.ok(transactionService.rateTransaction(id, score));
     }
-    
+
     @PutMapping("/{id}/cancel")
     public ResponseEntity<BarterTransaction> cancel(@PathVariable Long id) {
         return ResponseEntity.ok(transactionService.cancelTransaction(id));

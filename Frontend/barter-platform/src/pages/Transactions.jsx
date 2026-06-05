@@ -3,7 +3,7 @@ import api from "@/lib/api";
 import { AuthContext } from "@/context/AuthContext";
 import {
   Search, Clock, CheckCircle, XCircle, Truck, Handshake,
-  AlertTriangle, RefreshCw, Filter, Coins, Link2, ExternalLink, Star
+  RefreshCw, Filter, Coins, Link2, ExternalLink, Star
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -41,10 +41,7 @@ export default function Transactions() {
   const [revisionComment, setRevisionComment] = useState("");
   const [revisionLoading, setRevisionLoading] = useState(false);
 
-  // Dispute modal state
-  const [disputeModal, setDisputeModal] = useState(null);
-  const [disputeReason, setDisputeReason] = useState("");
-  const [disputeLoading, setDisputeLoading] = useState(false);
+
 
   // Complete modal state
   const [completeModal, setCompleteModal] = useState(null);
@@ -58,7 +55,7 @@ export default function Transactions() {
     DELIVERED: { label: "Delivered", color: "bg-purple-100 text-purple-700 dark:bg-purple-500/20 dark:text-purple-400 border-purple-200 dark:border-purple-500/30" },
     COMPLETED: { label: "Completed", color: "bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400 border-emerald-200 dark:border-emerald-500/30" },
     AUTO_COMPLETED: { label: "Auto Completed", color: "bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400 border-emerald-200/50 dark:border-emerald-500/20" },
-    DISPUTED: { label: "Disputed", color: "bg-rose-100 text-rose-700 dark:bg-rose-500/20 dark:text-rose-400 border-rose-200 dark:border-rose-500/30" },
+
     CANCELLED: { label: "Cancelled", color: "bg-zinc-100 text-zinc-700 dark:bg-zinc-500/20 dark:text-zinc-400 border-zinc-200 dark:border-zinc-500/30" },
     REVISION_REQUESTED: { label: "Revision Requested", color: "bg-amber-100 text-amber-700 dark:bg-amber-500/20 dark:text-amber-400 border-amber-200 dark:border-amber-500/30" },
   };
@@ -66,9 +63,7 @@ export default function Transactions() {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await api.get("/users/me", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const res = await api.get("/users/me");
         setUser(res.data);
       } catch (err) {
         console.error("Failed to fetch user", err);
@@ -88,9 +83,7 @@ export default function Transactions() {
     if (activeTab === "my-transactions") {
       setLoadingTransactions(true);
       try {
-        const res = await api.get(`/transactions/user/${user.id}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const res = await api.get(`/transactions/user/${user.id}`);
         setTransactions(res.data);
       } catch (err) {
         console.error("Failed to fetch transactions", err);
@@ -99,9 +92,7 @@ export default function Transactions() {
     } else {
       setLoadingRequests(true);
       try {
-        const res = await api.get(`/transactions/requests/${user.id}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const res = await api.get(`/transactions/requests/${user.id}`);
         setRequests(res.data);
       } catch (err) {
         console.error("Failed to fetch requests", err);
@@ -116,8 +107,7 @@ export default function Transactions() {
     try {
       await api.put(
         `/transactions/${transactionId}/${action}`,
-        {},
-        { headers: { Authorization: `Bearer ${token}` } }
+        {}
       );
 
       toast.success(`Transaction ${action}ed successfully.`);
@@ -140,8 +130,7 @@ export default function Transactions() {
     try {
       await api.put(
         `/transactions/${deliveryModal}/deliver`,
-        deliveryForm,
-        { headers: { Authorization: `Bearer ${token}` } }
+        deliveryForm
       );
       toast.success("Deliverable submitted successfully!");
       setDeliveryModal(null);
@@ -158,9 +147,7 @@ export default function Transactions() {
     if (!ratingModal || ratingScore < 1) return;
     setRatingLoading(true);
     try {
-      await api.put(`/transactions/${ratingModal}/rate?score=${ratingScore}`, {}, {
-         headers: { Authorization: `Bearer ${token}` }
-      });
+      await api.put(`/transactions/${ratingModal}/rate?score=${ratingScore}`, {});
       toast.success("Provider rated successfully!");
       setRatingModal(null);
       setRatingScore(0);
@@ -178,8 +165,7 @@ export default function Transactions() {
     setRevisionLoading(true);
     try {
       await api.put(`/transactions/${revisionModal}/revision`, 
-        { revisionComment },
-        { headers: { Authorization: `Bearer ${token}` } }
+        { revisionComment }
       );
       toast.success("Revision requested successfully!");
       setRevisionModal(null);
@@ -192,25 +178,7 @@ export default function Transactions() {
     setRevisionLoading(false);
   };
 
-  const handleDisputeSubmit = async (e) => {
-    e.preventDefault();
-    if (!disputeModal || !disputeReason.trim()) return;
-    setDisputeLoading(true);
-    try {
-      await api.put(`/transactions/${disputeModal}/dispute`, 
-        { disputeReason },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      toast.success("Dispute raised successfully.");
-      setDisputeModal(null);
-      setDisputeReason("");
-      fetchData();
-    } catch (err) {
-      console.error(err);
-      toast.error("Failed to raise dispute.");
-    }
-    setDisputeLoading(false);
-  };
+
 
   const handleCompleteSubmit = async (e) => {
     e.preventDefault();
@@ -218,8 +186,7 @@ export default function Transactions() {
     setCompleteLoading(true);
     try {
       await api.put(`/transactions/${completeModal}/complete`, 
-        { completionReview: completeReview.trim() },
-        { headers: { Authorization: `Bearer ${token}` } }
+        { completionReview: completeReview.trim() }
       );
       toast.success("Transaction marked as completed.");
       setCompleteModal(null);
@@ -287,10 +254,7 @@ export default function Transactions() {
                 className="bg-amber-50 hover:bg-amber-100 text-amber-600 dark:bg-amber-500/10 dark:hover:bg-amber-500/20 dark:text-amber-400 border border-amber-200 dark:border-amber-500/20 cursor-pointer font-medium shadow-sm transition-colors">
                 <RefreshCw className="w-4 h-4 mr-1.5" />Request Revision
               </Button>
-              <Button size="sm" onClick={() => setDisputeModal(transaction.id)}
-                className="bg-rose-50 hover:bg-rose-100 text-rose-600 dark:bg-rose-500/10 dark:hover:bg-rose-500/20 dark:text-rose-400 border border-rose-200 dark:border-rose-500/20 cursor-pointer font-medium shadow-sm transition-colors">
-                <AlertTriangle className="w-4 h-4 mr-1.5" />Dispute
-              </Button>
+
             </div>
           );
         }
@@ -621,58 +585,7 @@ export default function Transactions() {
         </div>
       )}
 
-      {/* Dispute Modal */}
-      {disputeModal && (
-        <div className="fixed inset-0 bg-zinc-900/60 dark:bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="bg-white dark:bg-zinc-900 rounded-3xl p-6 sm:p-8 w-full max-w-lg border border-zinc-200 dark:border-zinc-800 shadow-2xl relative"
-          >
-            <button
-              className="absolute top-4 right-4 sm:top-5 sm:right-5 w-10 h-10 rounded-full bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 flex items-center justify-center text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-50 transition-colors cursor-pointer"
-              onClick={() => { setDisputeModal(null); setDisputeReason(""); }}
-            >
-              <XCircle size={20} />
-            </button>
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-12 h-12 rounded-xl bg-rose-100 dark:bg-rose-500/20 flex items-center justify-center">
-                <AlertTriangle className="w-6 h-6 text-rose-600 dark:text-rose-400" />
-              </div>
-              <h2 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">Raise Dispute</h2>
-            </div>
-            <p className="text-zinc-600 dark:text-zinc-400 text-base mb-6 leading-relaxed">
-              If the provider failed to deliver the agreed-upon work or is unresponsive, provide a reason below to alert the platform admins.
-            </p>
-            <form onSubmit={handleDisputeSubmit} className="flex flex-col gap-5">
-              <textarea
-                placeholder="Explain the reason for the dispute..."
-                value={disputeReason}
-                onChange={(e) => setDisputeReason(e.target.value)}
-                rows={4}
-                className="w-full p-4 bg-white dark:bg-black/50 border border-zinc-200 dark:border-zinc-800 rounded-xl focus:outline-none focus:border-rose-500 focus:ring-2 focus:ring-rose-500/20 text-zinc-900 dark:text-zinc-50 placeholder-zinc-400 transition-all resize-none"
-                required
-              />
-              <div className="flex flex-col-reverse sm:flex-row justify-end gap-3 mt-2">
-                <button
-                  type="button"
-                  onClick={() => { setDisputeModal(null); setDisputeReason(""); }}
-                  className="px-6 py-3.5 bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 rounded-xl font-semibold text-zinc-700 dark:text-zinc-300 transition-colors cursor-pointer w-full sm:w-auto"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={disputeLoading}
-                  className="px-8 py-3.5 bg-rose-500 hover:bg-rose-600 text-white font-semibold rounded-xl shadow-lg shadow-rose-500/20 transition-all cursor-pointer w-full sm:w-auto disabled:opacity-50"
-                >
-                  {disputeLoading ? "Raising Dispute..." : "Raise Dispute"}
-                </button>
-              </div>
-            </form>
-          </motion.div>
-        </div>
-      )}
+
 
       {/* Complete Modal */}
       {completeModal && (
@@ -813,18 +726,7 @@ function TransactionCard({ transaction, isBuyer, statusConfig, actionButtons, in
             )}
           </div>
 
-          {/* Dispute Link Section */}
-          {transaction.status === "DISPUTED" && transaction.disputeReason && (
-            <div className="mt-5 p-4 bg-rose-50 dark:bg-rose-500/10 border border-rose-200 dark:border-rose-500/20 rounded-2xl">
-              <div className="flex items-center gap-2 mb-2">
-                <AlertTriangle className="w-4 h-4 text-rose-600 dark:text-rose-400" />
-                <span className="text-sm font-bold text-rose-900 dark:text-rose-50">Dispute Reason</span>
-              </div>
-              <p className="text-sm text-rose-700 dark:text-rose-300 italic">
-                "{transaction.disputeReason}"
-              </p>
-            </div>
-          )}
+
 
           {/* Revision Link Section */}
           {transaction.status === "REVISION_REQUESTED" && transaction.revisionComment && (

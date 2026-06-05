@@ -34,6 +34,9 @@ public class DataInitializer implements CommandLineRunner {
     public void run(String... args) {
         org.springframework.security.crypto.password.PasswordEncoder encoder = new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder();
         String defaultBcryptPw = encoder.encode("password123");
+        
+        // Fix: Ensure all existing listings are active (in case soft-delete column was added as false)
+        listingRepository.findAll().forEach(l -> { if(!l.isActive()){ l.setActive(true); listingRepository.save(l); } });
 
         User ahmed = new User("ahmed", "ahmed@xerv.dev", defaultBcryptPw, "Ahmed", "Cloud infrastructure specialist and cybersecurity enthusiast.");
         ahmed.setCredits(150);

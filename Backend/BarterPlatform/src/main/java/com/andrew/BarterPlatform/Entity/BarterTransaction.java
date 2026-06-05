@@ -29,47 +29,42 @@ public class BarterTransaction {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "buyer_id", nullable = false)
 	private User buyer;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "provider_id", nullable = false)
 	private User provider;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "listing_id", nullable = false)
 	private Listing listing;
 
-	
 	@Column(nullable = false)
 	private Integer credits;
-	
+
 	private Integer rating; // 1 to 5 stars, null if unrated
-	
+
 	@Enumerated(EnumType.STRING)
 	private TransactionStatus status = TransactionStatus.PENDING;
-	
+
 	private LocalDateTime createdAt = LocalDateTime.now();
 	private LocalDateTime updatedAt = LocalDateTime.now();
 	private LocalDateTime deliveredAt;
-	
+
 	private String deliveryLink;
 	private String deliveryNote;
-    
-    @Column(columnDefinition = "TEXT")
-    private String revisionComment;
-    
-    @Column(columnDefinition = "TEXT")
-    private String disputeReason;
-    
-    @Column(columnDefinition = "TEXT")
-    private String completionReview;
 
-	
+	@Column(columnDefinition = "TEXT")
+	private String revisionComment;
+
+	@Column(columnDefinition = "TEXT")
+	private String completionReview;
+
 	@PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
-    }
+	protected void onUpdate() {
+		updatedAt = LocalDateTime.now();
+	}
 }

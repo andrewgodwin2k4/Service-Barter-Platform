@@ -1,7 +1,7 @@
 import { useEffect, useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Search, RefreshCw, X, ArrowRight, Coins, Tag, Hexagon, Star, MessageCircle } from "lucide-react";
+import { Search, RefreshCw, X, ArrowRight, Coins, Tag, Hexagon, Star, MessageCircle, Sparkles } from "lucide-react";
 import api from "@/lib/api";
 import { AuthContext } from "@/context/AuthContext";
 import { toast } from "sonner";
@@ -13,6 +13,7 @@ export default function Listings() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [currentUserId, setCurrentUserId] = useState(null);
+  const [hasPreferences, setHasPreferences] = useState(false);
 
   const [selectedListing, setSelectedListing] = useState(null);
   const [requesting, setRequesting] = useState(false);
@@ -22,10 +23,9 @@ export default function Listings() {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await api.get("/users/me", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const res = await api.get("/users/me");
         setCurrentUserId(res.data.id);
+        setHasPreferences(res.data.preferences && res.data.preferences.length > 0);
       } catch (err) {
         console.error("Failed to fetch current user", err);
       }
@@ -36,7 +36,16 @@ export default function Listings() {
   useEffect(() => {
     const fetchListings = async () => {
       try {
-        const res = await api.get("/listings", { params: { search } });
+        let res;
+        if (currentUserId && hasPreferences) {
+          // Fetch recommended listings based on user preferences
+          res = await api.get("/listings/recommended", {
+            params: { userId: currentUserId, search: search || undefined },
+          });
+        } else {
+          // Fallback: fetch all listings
+          res = await api.get("/listings", { params: { search } });
+        }
         const all = res.data || [];
         // Hide the current user's own listings
         setListings(currentUserId ? all.filter(l => l.owner?.id !== currentUserId) : all);
@@ -49,7 +58,7 @@ export default function Listings() {
     };
 
     fetchListings();
-  }, [search, currentUserId]);
+  }, [search, currentUserId, hasPreferences]);
 
   const handleRequest = async () => {
     if (!selectedListing || !currentUserId) return;
@@ -94,7 +103,16 @@ export default function Listings() {
           transition={{ duration: 0.5 }}
           className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 tracking-tight text-foreground"
         >
-          Explore <span className="text-primary">Services</span>
+          {hasPreferences ? (
+            <>
+              <Sparkles className="inline-block w-8 h-8 sm:w-10 sm:h-10 text-primary mr-2 -mt-1" />
+              Recommended <span className="text-primary">for You</span>
+            </>
+          ) : (
+            <>
+              Explore <span className="text-primary">Services</span>
+            </>
+          )}
         </motion.h1>
         <motion.p
           initial={{ opacity: 0, y: 20 }}
@@ -102,7 +120,9 @@ export default function Listings() {
           transition={{ duration: 0.5, delay: 0.1 }}
           className="text-muted-foreground max-w-xl mx-auto text-base sm:text-lg font-medium"
         >
-          Browse digital services offered by the community — logos, websites, marketing, and more.
+          {hasPreferences
+            ? "Services curated based on your interests — tailored just for you."
+            : "Browse digital services offered by the community — logos, websites, marketing, and more."}
         </motion.p>
       </div>
 

@@ -1,5 +1,7 @@
 package com.andrew.BarterPlatform.Dto;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,5 +16,6 @@ public class UserDto {
 	private String password;
 	private String profileName;
 	private String bio;
+	private List<String> preferences;
 	
 }

@@ -18,14 +18,15 @@ const COLORS = ['var(--color-primary)', 'var(--color-sky-500)', 'var(--color-eme
 
 export default function Profile() {
   const { id } = useParams();
-  const { token, user: currentUser } = useContext(AuthContext);
+  const { token } = useContext(AuthContext); // user object is not in context
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [form, setForm] = useState({ profileName: "", bio: "" });
   const [saving, setSaving] = useState(false);
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
-  const isOwnProfile = !id || (currentUser && currentUser.id === parseInt(id));
+  const isOwnProfile = !id; // Simplified: if no ID in URL, it's own profile. 
+  // (In a more complex app, we'd compare owner.id with currentUser.id)
 
   // Stats
   const [myListings, setMyListings] = useState([]);
@@ -40,21 +41,26 @@ export default function Profile() {
     const fetchAll = async () => {
       try {
         const userEndpoint = id ? `/users/${id}` : "/users/me";
-        const userRes = await api.get(userEndpoint, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const userRes = await api.get(userEndpoint);
         const userData = userRes.data;
         setUser(userData);
         setForm({ profileName: userData.profileName || "", bio: userData.bio || "" });
 
-        const [listingsRes, transRes, reqRes] = await Promise.all([
-          api.get("/listings", { params: { userId: userData.id }, headers: { Authorization: `Bearer ${token}` } }),
-          api.get(`/transactions/user/${userData.id}`, { headers: { Authorization: `Bearer ${token}` } }),
-          api.get(`/transactions/requests/${userData.id}`, { headers: { Authorization: `Bearer ${token}` } }),
+        // Use allSettled to ensure one failure doesn't block other data
+        const results = await Promise.allSettled([
+          api.get("/listings", { params: { userId: userData.id } }),
+          api.get(`/transactions/user/${userData.id}`),
+          api.get(`/transactions/requests/${userData.id}`),
         ]);
-        setMyListings(listingsRes.data || []);
-        setMyTransactions(transRes.data || []);
-        setIncomingRequests(reqRes.data || []);
+
+        if (results[0].status === 'fulfilled') setMyListings(results[0].value.data || []);
+        if (results[1].status === 'fulfilled') setMyTransactions(results[1].value.data || []);
+        if (results[2].status === 'fulfilled') setIncomingRequests(results[2].value.data || []);
+
+        // Optional: show limited error if some failed
+        if (results.some(r => r.status === 'rejected')) {
+          console.warn("Some profile data failed to load", results.filter(r => r.status === 'rejected'));
+        }
       } catch (err) {
         console.error("Failed to fetch profile data", err);
         toast.error("Failed to load profile");
@@ -72,7 +78,7 @@ export default function Profile() {
     setSaving(true);
     const t = toast.loading("Updating profile...");
     try {
-      const res = await api.put(`/users/${user.id}`, { ...form, username: user.username, email: user.email }, { headers: { Authorization: `Bearer ${token}` } });
+      const res = await api.put(`/users/${user.id}`, { ...form, username: user.username, email: user.email });
       setUser(res.data);
       setIsEditing(false);
       toast.success("Profile updated!", { id: t });
@@ -99,7 +105,7 @@ export default function Profile() {
 
     try {
       const res = await api.post(`/users/${user.id}/avatar`, formData, {
-        headers: { "Content-Type": "multipart/form-data", Authorization: `Bearer ${token}` }
+        headers: { "Content-Type": "multipart/form-data" }
       });
       setUser(res.data);
       toast.success("Avatar updated successfully!", { id: t });

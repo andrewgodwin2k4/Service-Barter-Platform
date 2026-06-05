@@ -8,8 +8,7 @@ public enum TransactionStatus {
 	DELIVERED,
 	COMPLETED,
 	AUTO_COMPLETED,
-	DISPUTED,
 	CANCELLED,
 	REVISION_REQUESTED
-	
+
 }

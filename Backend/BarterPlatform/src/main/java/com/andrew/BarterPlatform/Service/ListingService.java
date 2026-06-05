@@ -2,6 +2,7 @@ package com.andrew.BarterPlatform.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -9,14 +10,17 @@ import com.andrew.BarterPlatform.Dto.ListingDto;
 import com.andrew.BarterPlatform.Dto.ListingResultDto;
 import com.andrew.BarterPlatform.Entity.Listing;
 import com.andrew.BarterPlatform.Entity.User;
+import com.andrew.BarterPlatform.Enum.SkillCategory;
 import com.andrew.BarterPlatform.Repository.ListingRepository;
 import com.andrew.BarterPlatform.Repository.UserRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ListingService {
 
 	private final ListingRepository listingRepo;
@@ -25,7 +29,7 @@ public class ListingService {
 	public List<Listing> getAllListings(String search) {
 		List<Listing> listings;
 		if(search == null || search.isBlank())
-			 listings = listingRepo.findAll();
+			 listings = listingRepo.findAll().stream().filter(l -> l.isActive()).collect(Collectors.toList());
 		else
 			listings = listingRepo.searchListings(search);
 		
@@ -37,11 +41,36 @@ public class ListingService {
 
 	    List<Listing> listings;
 	    if (search == null || search.isBlank()) 
-	        listings = listingRepo.findByOwner(owner);
+	        listings = listingRepo.findByOwnerAndActiveTrue(owner);
 	    else 
 	        listings = listingRepo.searchListingsByOwner(owner, search);
 
 	    return listings;
+	}
+
+	public List<Listing> getRecommendedListings(Long userId, String search) {
+		User user = userRepo.findById(userId).orElseThrow(() -> new EntityNotFoundException("User not found!"));
+		List<SkillCategory> prefs = user.getPreferences();
+
+		// If user has no preferences, return all listings (excluding own)
+		if (prefs == null || prefs.isEmpty()) {
+			List<Listing> all = getAllListings(search);
+			return all.stream()
+				.filter(l -> !l.getOwner().getId().equals(userId))
+				.collect(Collectors.toList());
+		}
+
+		List<Listing> recommended;
+		if (search == null || search.isBlank()) {
+			recommended = listingRepo.findByCategoryInAndActiveTrue(prefs);
+		} else {
+			recommended = listingRepo.searchListingsByCategories(prefs, search);
+		}
+
+		// Exclude the user's own listings
+		return recommended.stream()
+			.filter(l -> !l.getOwner().getId().equals(userId))
+			.collect(Collectors.toList());
 	}
 
 	
@@ -78,7 +107,8 @@ public class ListingService {
 	
 	public void deleteListing(Long id) {
         Listing listing = getListingById(id);
-        listingRepo.delete(listing);
+        listing.setActive(false);
+        listingRepo.save(listing);
     }
 	
 }

@@ -1,12 +1,15 @@
 package com.andrew.BarterPlatform.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.andrew.BarterPlatform.Dto.UserDto;
 import com.andrew.BarterPlatform.Entity.User;
+import com.andrew.BarterPlatform.Enum.SkillCategory;
 import com.andrew.BarterPlatform.Repository.UserRepository;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -47,6 +50,15 @@ public class UserService {
 			userDto.getProfileName().trim(), 
 			userDto.getBio().trim()
 		);
+
+		// Convert preference strings to SkillCategory enums
+		if (userDto.getPreferences() != null && !userDto.getPreferences().isEmpty()) {
+			List<SkillCategory> prefs = userDto.getPreferences().stream()
+				.map(s -> SkillCategory.valueOf(s.trim()))
+				.collect(Collectors.toList());
+			user.setPreferences(prefs);
+		}
+
 		return userRepo.save(user);
 		
 	}
@@ -61,6 +73,15 @@ public class UserService {
 		}
 		user.setProfileName(userDto.getProfileName());
 		user.setBio(userDto.getBio());
+
+		// Update preferences if provided
+		if (userDto.getPreferences() != null) {
+			List<SkillCategory> prefs = userDto.getPreferences().stream()
+				.map(s -> SkillCategory.valueOf(s.trim()))
+				.collect(Collectors.toList());
+			user.setPreferences(prefs);
+		}
+
 		return userRepo.save(user);
 		
 	}

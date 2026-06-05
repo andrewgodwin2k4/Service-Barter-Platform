@@ -39,5 +39,8 @@ public class Listing {
 	@ManyToOne
 	@JoinColumn(name = "user_id", nullable = false)
 	private User owner;
+
+	@Column(nullable = false, columnDefinition = "boolean default true")
+	private boolean active = true;
 	
 }
